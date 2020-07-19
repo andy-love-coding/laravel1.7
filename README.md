@@ -225,8 +225,8 @@
   ```
   $ php artisan migrate --help
   ```
-## 优化页面
-### 样式美化
+## 4 优化页面
+### 4.2 样式美化
 - 1.新建分支
   ```
   $ git checkout master
@@ -354,4 +354,28 @@
   ```
   $ git add -A
   $ git commit -m "4.2 初始化样式 集成 Bootstrap"
+  ```
+### 4.3 前端工作流
+- [Laravel 前端工作流](https://learnku.com/courses/laravel-essential-training/6.x/laravel-front-end-workflow/5454)
+  - SASS 语法基础
+  - NPM, Yarn, Laravel Mix
+### 4.4 浏览器缓存问题
+- 1.问题描述
+  - 现代化的浏览器，会对静态文件进行缓存，静态文件在本课程的范畴内，指的是 .css 、.js 后缀的文件。开发时，你明明修改了样式，但是刷新浏览器却看不见变化，然后你就来回不断地修改你的样式文件，做各种测试，浏览器页面仍然一成不变。
+- 2.解决方案  
+  - 1.在 `webpack.mix.js` 中加 `.version()`
+    ```
+    const mix = require('laravel-mix');
+
+    mix.js('resources/js/app.js', 'public/js')
+      .sass('resources/sass/app.scss', 'public/css').version();
+    ```
+  - 2.用 `mix()函数来加载` resources/views/layouts/default.blade.php
+    ```
+    <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+    ```
+- 3.Git版本控制
+  ```
+  $ git add -A
+  $ git commit -m "4.4 静态文件浏览器缓存问题 .version() mix()"
   ```
