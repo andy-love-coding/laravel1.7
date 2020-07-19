@@ -489,3 +489,43 @@
   $ git add -A
   $ git commit -m "4.6 命名路由"
   ```
+### 4.7 用户注册页面
+- 1.注册路由 routes/web.php
+  ```
+  Route::get('signup', 'UsersController@create')->name('signup');
+  ```
+- 2.生成用户控制器
+  ```
+  $ php artisan make:controller UsersController
+  ```
+  app/Http/Controllers/UsersController.php
+  ```
+  public function create()
+  {
+      return view('users.create');
+  }
+  ```
+- 3.注册页面视图 resources/views/users/create.blade.php
+  ```
+  @extends('layouts.default')
+  @section('title', '注册')
+
+  @section('content')
+  <h1>注册</h1>
+  @stop
+  ```
+  给注册页面提供入口 resources/views/static_pages/home.blade.php
+  ```
+  <a class="btn btn-lg btn-success" href="{{ route('signup') }}" role="button">现在注册</a>
+  ```
+- 4.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "4.7 用户注册页面"
+  ```
+- 5.提交代码 (合并分支)
+  ```
+  $ git checkout master
+  $ git merge filling-layout-style
+  $ git push
+  ```
