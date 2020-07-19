@@ -460,5 +460,32 @@
 - 4.Git版本控制
   ```
   $ git add -A
-  $ git commit -m "切割头部和尾部子视图"
+  $ git commit -m "4.5 切割头部和尾部子视图"
+  ```
+### 4.6 布局中的链接(命名路由)
+- 1.给路由命名 routes/web.php
+  ```
+  <?php
+
+  Route::get('/', 'StaticPagesController@home')->name('home');
+  Route::get('/help', 'StaticPagesController@help')->name('help');
+  Route::get('/about', 'StaticPagesController@about')->name('about');
+  ```
+- 2.使用命名路由  
+  - resources/views/layouts/_header.blade.php
+    ```
+    <a class="navbar-brand" href="{{ route('home') }}">Weibo App</a>
+    <ul class="navbar-nav justify-content-end">
+      <li class="nav-item"><a class="nav-link" href="{{ route('help') }}">帮助</a></li>
+      <li class="nav-item" ><a class="nav-link" href="#">登录</a></li>
+    </ul>
+    ```
+  - resources/views/layouts/_footer.blade.php
+    ```
+    <a href="{{ route('about') }}" >关于</a>
+    ```
+- 3.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "4.6 命名路由"
   ```
