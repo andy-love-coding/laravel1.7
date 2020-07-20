@@ -820,6 +820,8 @@
           'name' => 'required|unique:users|max:50',
           'email' => 'required|email|unique:users|max:255',
           'password' => 'required|confirmed|min:6'
+      ], [
+          'name.required' => '名字都不写，想上天吗？',
       ]);
       return;
   }
@@ -838,3 +840,47 @@
   $ git add -A
   $ git commit -m "6.4 增加 CSRF 验证"
   ```
+### 6.5 错误消息
+- 1.错误消息局部视图 resources/views/shared/_errors.blade.php
+  ```
+  @if (count($errors) > 0)
+    <div class="alert alert-danger">
+        <ul>
+            @foreach($errors->all() as $error)
+            <li>{{ $error }}</li>
+            @endforeach
+        </ul>
+    </div>
+  @endif
+  ```
+  - Laravel 默认会将所有的验证错误信息进行闪存。当检测到错误存在时，Laravel 会自动将这些错误消息绑定到视图上，因此我们可以在所有的视图上使用 errors 变量来显示错误信息。
+- 2.引用「错误消息局部视图」 resources/views/users/create.blade.php
+  ```
+  <div class="card-body">
+    @include('shared._errors')
+    <form method="POST" action="{{ route('users.store') }}">
+  ```
+- 3.添加语言包
+  - 由于错误消息是英文的，我们添加语言包
+    ```
+    $ composer require "overtrue/laravel-lang:~3.0"
+    ```
+  - 安装成功后，在 config/app.php 文件中将以下这一行：
+    ```
+    Illuminate\Translation\TranslationServiceProvider::class,
+    ```
+    替换为
+    ```
+    Overtrue\LaravelLang\TranslationServiceProvider::class,
+    ```
+  - 在 config/app.php 中将项目设置为中文
+    ```
+    'locale' => 'zh-CN',
+    ```
+- 4.Git版本控制
+  ```
+  $ git add -A
+  $ git commit -m "6.5 错误信息 添加语言包"
+  ```
+
+
