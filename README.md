@@ -530,6 +530,7 @@
   $ git push
   ```
 ## 5 用户模型
+### 5.1 章节说明
 - 1.准备好舞台
   ```
   $ git checkout master
@@ -651,4 +652,115 @@
   $ git checkout master
   $ git merge modeling-users
   $ git push
+  ```
+## 6 用户注册
+### 6.2 显示用户信息
+- 0.新建一个分支
+  ```
+  $ git checkout master
+  $ git checkout -b sign-up
+  ```
+- 1.路由 routes/web.php
+  ```
+  Route::resource('users', 'UsersController');
+  ````
+  以上代码等同于
+  ```
+  Route::get('/users', 'UsersController@index')->name('users.index');
+  Route::get('/users/create', 'UsersController@create')->name('users.create');
+  Route::get('/users/{user}', 'UsersController@show')->name('users.show');
+  Route::post('/users', 'UsersController@store')->name('users.store');
+  Route::get('/users/{user}/edit', 'UsersController@edit')->name('users.edit');
+  Route::patch('/users/{user}', 'UsersController@update')->name('users.update');
+  Route::delete('/users/{user}', 'UsersController@destroy')->name('users.destroy');
+  ```
+  | HTTP 请求 | URL                | 动作                    | 作用                   |
+  | --------- | ------------------ | ----------------------- | ---------------------- |
+  | GET       | /users             | UsersController@index   | 显示所有用户列表的页面 |
+  | GET       | /users/{user}      | UsersController@show    | 显示用户个人信息的页面 |
+  | GET       | /users/create      | UsersController@create  | 创建用户的页面         |
+  | POST      | /users             | UsersController@store   | 创建用户               |
+  | GET       | /users/{user}/edit | UsersController@edit    | 编辑用户个人资料的页面 |
+  | PATCH     | /users/{user}      | UsersController@update  | 更新用户               |
+  | DELETE    | /users/{user}      | UsersController@destroy | 删除用户               |
+- 2.控制器 app/Http/Controllers/UsersController.php
+  ```
+  use App\Models\User;
+  ...
+    public function show(User $user)
+    {
+        return view('users.show', compact('user'));
+    }
+  ```
+  - show() 方法传参时声明了类型 —— Eloquent 模型 User，对应的变量名 $user 会匹配路由片段中的 {user}，这样，Laravel 会自动注入与请求 URI 中传入的 ID 对应的用户模型实例
+  - 此功能称为 [『隐性路由模型绑定』](https://learnku.com/docs/laravel/6.x/routing/5135#cbc0a0)，是『约定优于配置』设计范式的体现
+- 3.用户视图 resources/views/users/show.blade.php
+  ```
+  @extends('layouts.default')
+  @section('title', $user->name)
+
+  @section('content')
+  <div class="row">
+    <div class="offset-md-2 col-md-8">
+      <div class="col-md-12">
+        <div class="offset-md-2 col-md-8">
+          <section class="user_info">
+            @include('shared._user_info', ['user' => $user])
+          </section>
+        </div>
+      </div>
+    </div>
+  </div>
+  @stop
+  ```
+- 4.用户局部视图 resources/views/shared/_user_info.blade.php
+    ```
+    <a href="{{ route('users.show', $user->id) }}">
+      <img src="{{ $user->gravatar('140') }}" alt="{{ $user->name }}" class="gravatar"/>
+    </a>
+    <h1>{{ $user->name }}</h1>
+    ```
+- 5.Gravatar 头像和左边栏  
+  - 4.1 模型中 app/Models/User.php
+    ```
+    public function gravatar($size = '100')
+    {
+        $hash = md5(strtolower(trim($this->attributes['email'])));
+        return "http://www.gravatar.com/avatar/$hash?s=$size";
+    }
+    ```
+- 6.样式优化 resources/sass/app.scss
+  ```
+  /* User gravatar */
+
+  section.user_info {
+    padding-bottom: 10px;
+    margin-top: 20px;
+    text-align: center;
+    .gravatar {
+      float: none;
+      max-width: 70px;
+    }
+    h1 {
+      font-size: 1.4em;
+      letter-spacing: -1px;
+      margin-bottom: 3px;
+      margin-top: 15px;
+    }
+  }
+
+  .gravatar {
+    float: left;
+    max-width: 50px;
+    border-radius: 50%;
+  }
+  ```
+  - 编译样式
+    ```
+    $ npm run dev
+    ```
+- 7.Git版本控制
+  ```
+  $ git add -A
+  $ git commit -m "6.2 用户显示页面 用户局部视图include"
   ```
