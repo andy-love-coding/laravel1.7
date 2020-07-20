@@ -529,3 +529,126 @@
   $ git merge filling-layout-style
   $ git push
   ```
+## 5 用户模型
+- 1.准备好舞台
+  ```
+  $ git checkout master
+  $ git checkout -b modeling-users
+  ```
+### 5.2 数据库迁移
+- 1.[数据库迁移](https://learnku.com/courses/laravel-essential-training/6.x/database-migration/5461)
+  - [可用的字段类型](https://learnku.com/docs/laravel/6.x/migrations/5173#b419dd)
+### 5.3 查看数据库表
+- 1.[数据库工具 SequelPro](https://learnku.com/courses/laravel-essential-training/6.x/check-the-database-table/5462#679a96)
+- 2.执行迁移（生成表）
+  ```
+  $ php artisan migrate
+  ```
+### 5.4 模型文件
+- 1.使用 `App\Models` 命名空间
+  - 1.1 新建文件夹，并移动 `User.php` 文件
+    ```
+    $ mkdir app/Models
+    $ mv app/User.php app/Models/User.php
+    ```
+  - 1.2 修改 User.php 文件，更改 namespace  
+    app/Models/User.php
+    ```
+    namespace App\Models;
+    ```
+  - 1.3 编辑器全局搜索 App\User 替换为 App\Models\User （共3个文件4处替换）
+  - 1.4 因为上面的文件改动较大，因此我们需要进行一次 Git 提交，该改动的代码进行保存。
+    ```
+    $ git add -A
+    $ git commit -m "5.4 Move user model to models folder"
+    ```
+- 2.操作 Article 模型(测试)
+  - 2.1 生成模型
+    ```
+    $ php artisan make:model Article
+    ```
+  - 2.2 指定命名空间
+    ```
+    $ rm app/Article.php
+    $ php artisan make:model Models/Article
+    ```
+  - 2.3 同时创建迁移文件
+    ```
+    $ rm app/Models/Article.php
+    $ php artisan make:model Models/Article -m
+    ```
+  - 收拾舞台 (清除修改)
+    ```
+    // 当要撤销新增、修改等超时时，先添加文件到暂存区，然后强制检出，就相当于上都没做  
+    $ git add -A                  // 添加所有 (工作区 → 暂存区)
+    $ git checkout -f             // 放弃本地修改，强制检出代码（将修改内容从 暂存区 → 工作区）
+    ```
+- 3.Eloquent 表命名约定  
+  - 模型**默认**情况下会使用类的「下划线命名法」与「复数形式名称」来作为数据表的名称
+    - Article 数据模型类对应 articles 表；
+    - User 数据模型类对应 users 表；
+    - BlogPost 数据模型类对应 blog_posts 表
+  - 如果你需要**指定**自己的数据表，则可以通过 table 属性来定义
+    ```
+    protected $table = 'my_articles';
+    ```
+### 5.5 创建用户对象(Tinker)
+- 1.进入 Tinker 环境
+  ```
+  $ php artisan tinker
+  ```
+- 2 创建一个用户对象
+  ```
+  >>> App\Models\User::create(['name'=> 'Summer', 'email'=>'summer@example.com','password'=>bcrypt('password')])
+  ```
+### 5.6 查找用户对象(测试)
+- 1.引用 `App\Models\User` Eloquent 模型类
+  ```
+  >>> use App\Models\User
+  ```
+- 2.查找一个 id 为 1 的用户
+  ```
+  >>> User::find(1)
+  ```
+  当 find 方法的 id 不存在时，Tinker 将会返回 null
+  ```
+  >>> User::find(5)
+  => null
+  ```
+  在查询用户不存在时触发报错的话，可使用 findOrFail
+  ```
+  >>> User::findOrFail(5)
+  Illuminate\Database\Eloquent\ModelNotFoundException with message 'No query results for model [App\Models\User] 5'
+  ```
+- 3.查找用户表中的首个用户
+  ```
+  >>> User::first()
+  ```
+- 4.取出所有的用户数据
+  ```
+  >>> User::all()
+  ```
+### 5.7 更新用户对象(测试)
+- 1.更新用户对象
+  ```
+  >>> $user = User::first()
+  ```
+  - 1.1 通过 save 方法更新
+    ```
+    >>> $user->name = 'Monkey'
+    >>> User::first() // 查看：还未更新
+    >>> $user->save() // 保存更新
+    >>> User::first() // 查看：已经更新
+    ```
+  - 2.通过 update 方法更新
+    ```
+    >>> $user->update(['name'=>'Summer'])
+    >>> User::first() // 查看：已经更新
+    ```
+### 5.8 小结
+- 1.将代码切回到主分支中进行合并，并提交
+  ```
+  $ git checkout master
+  $ git merge modeling-users
+  $ git push
+  ```
