@@ -811,3 +811,30 @@
   $ git add -A
   $ git commit -m "6.3 用户注册表单"
   ```
+### 6.4 用户数据验证
+- 1.用户数据验证 app/Http/Controllers/UsersController.php
+  ```
+  public function store(Request $request)
+  {
+      $this->validate($request, [
+          'name' => 'required|unique:users|max:50',
+          'email' => 'required|email|unique:users|max:255',
+          'password' => 'required|confirmed|min:6'
+      ]);
+      return;
+  }
+  ```
+  - [表单验证请点击](https://learnku.com/docs/laravel/6.x/validation/5144)
+- 2.表单提交时，增加 CSFR 验证（跨站请求伪造) resources/views/users/create.blade.php
+  ```
+  <form method="POST" action="{{ route('users.store') }}">
+    {{ csrf_field() }}
+  ```
+  - 这时候如果你再次填写注册表单并进行提交，你会发现页面没什么反应，这是因为：
+    - 在表单信息验证失败时，返回原页面，但在页面上没有给出错误提示；
+    - 在表单信息验证通过后，页面没有重定向跳转到其它页面，并给出注册成功的提示；
+- 3.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "6.4 增加 CSRF 验证"
+  ```
