@@ -1190,3 +1190,93 @@
   $ git add -A
   $ git commit -m "7.2 创建会话"
   ```
+### 7.3 用户登录
+- 1.修改导航视图 resources/views/layouts/_header.blade.php
+  ```
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container ">
+      <a class="navbar-brand" href="{{ route('home') }}">Weibo App</a>
+      <ul class="navbar-nav justify-content-end">
+        @if (Auth::check())
+          <li class="nav-item"><a class="nav-link" href="#">用户列表</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              {{ Auth::user()->name }}
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              <a class="dropdown-item" href="{{ route('users.show', Auth::user()) }}">个人中心</a>
+              <a class="dropdown-item" href="#">编辑资料</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" id="logout" href="#">
+                <form action="{{ route('logout') }}" method="POST">
+                  {{ csrf_field() }}
+                  {{ method_field('DELETE') }}
+                  <button class="btn btn-block btn-danger" type="submit" name="button">退出</button>
+                </form>
+              </a>
+            </div>
+          </li>
+        @else
+          <li class="nav-item"><a class="nav-link" href="{{ route('help') }}">帮助</a></li>
+          <li class="nav-item" ><a class="nav-link" href="{{ route('login') }}">登录</a></li>
+        @endif
+      </ul>
+    </div>
+  </nav>
+  ```
+  - Auth::check() 方法用于判断当前用户是否已登录
+  - 伪造 DELETE 请求：由于浏览器不支持发送 DELETE 请求，因此我们需要使用一个隐藏域来伪造 DELETE 请求。
+    ```
+    {{ method_field('DELETE') }}
+    ```
+    其等价于
+    ```
+    <input type="hidden" name="_method" value="DELETE">
+    ```
+- 2.集成 Bootstrap 的 JavaScript 库
+  - 2.1 编译 resources/js/app.js 到 public/js/app.js
+    - Laravel 6.x 默认已经在 resources/js/bootstrap.js 文件中为我们配置好了 jQuery 和 Bootstrap。
+    - 在 resources/js/app.js 中加载 resources/js/bootstrap.js
+      ```
+      require('./bootstrap');
+      ```
+    - 执行编译任务，编译 resources/js/app.js 到 public/js/app.js
+      ```
+      $ npm run dev
+      ```
+  - 2.2 引用 public/js/app.js 文件  
+    resources/views/layouts/default.blade.php
+    ```
+      <script src="{{ mix('js/app.js') }}"></script>
+    </body>
+    ```
+  - 2.2 现在尝试再次点击导航栏下拉菜单，能发现它已经能够正常工作。
+- 3.注册后自动登录 Auth::login($user);  
+  app/Http/Controllers/UsersController.php
+  ```
+  use Auth;
+  ...
+  public function store(Request $request)
+  {
+      $this->validate($request, [
+          'name' => 'required|max:50',
+          'email' => 'required|email|unique:users|max:255',
+          'password' => 'required|confirmed|min:6'
+      ]);
+
+      $user = User::create([
+          'name' => $request->name,
+          'email' => $request->email,
+          'password' => bcrypt($request->password),
+      ]);
+
+      Auth::login($user);
+      session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
+      return redirect()->route('users.show', [$user]);
+  }
+  ```
+- 4.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "7.3 登录成功后导航逻辑及自动登录"
+  ```
