@@ -935,3 +935,166 @@
   $ git merge sign-up
   $ git push
   ```
+### 6.7 在 Heroku 上使用 PostgreSQL
+- 1.[使用多个数据库的配置](https://learnku.com/courses/laravel-essential-training/6.x/using-postgresql-on-heroku/5474)
+- 2.设置环境变量 IS_IN_HEROKU
+  - 如果环境为本地环境，则使用 MySQL 数据库，若为 Heroku 环境，则使用 PostgreSQL 数据库。我们可以通过为 Heroku 新增一个 IS_IN_HEROKU 配置项来判断应用是否运行在 Heroku 上。
+    ```
+    $ heroku config:set IS_IN_HEROKU=true
+    ```
+- 3.自定义辅助函数
+  - 2.1 帮助为不同环境的数据库连接方式定义一个帮助方法(即辅助函数)，以便根据应用不同的运行环境来指定数据库配置信息，我们需要新建一个 `helpers.php` 
+  - 2.2 新建帮助文件 app/helpers.php
+    ```
+    <?php
+
+    function get_db_config()
+    {
+        if (getenv('IS_IN_HEROKU')) {
+            $url = parse_url(getenv("DATABASE_URL"));
+
+            return $db_config = [
+                'connection' => 'pgsql',
+                'host' => $url["host"],
+                'database'  => substr($url["path"], 1),
+                'username'  => $url["user"],
+                'password'  => $url["pass"],
+            ];
+        } else {
+            return $db_config = [
+                'connection' => env('DB_CONNECTION', 'mysql'),
+                'host' => env('DB_HOST', 'localhost'),
+                'database'  => env('DB_DATABASE', 'forge'),
+                'username'  => env('DB_USERNAME', 'forge'),
+                'password'  => env('DB_PASSWORD', ''),
+            ];
+        }
+    }
+    ```
+  - 2.3 自动加载帮助文件：在 composer.json 中的 autoload 中加入："files": ["app/helper.php"]
+    ```
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "classmap": [
+            "database/seeds",
+            "database/factories"
+        ],
+        "files": [
+            "app/helpers.php"
+        ]
+    }
+    ```
+  - 2.4 运行以下命令进行重新加载文件即可
+    ```
+    $ composer dump-autoload
+    ```
+- 4.数据库配置 config/database.php
+  ```
+  <?php
+
+  use Illuminate\Support\Str;
+
+  $db_config = get_db_config();
+
+  return [
+
+      'default' => $db_config['connection'],
+
+      'connections' => [
+
+          'sqlite' => [
+              'driver' => 'sqlite',
+              'url' => env('DATABASE_URL'),
+              'database' => env('DB_DATABASE', database_path('database.sqlite')),
+              'prefix' => '',
+              'foreign_key_constraints' => env('DB_FOREIGN_KEYS', true),
+          ],
+
+          'mysql' => [
+              'driver' => 'mysql',
+              'url' => env('DATABASE_URL'),
+              'host' => env('DB_HOST', '127.0.0.1'),
+              'port' => env('DB_PORT', '3306'),
+              'database' => env('DB_DATABASE', 'forge'),
+              'username' => env('DB_USERNAME', 'forge'),
+              'password' => env('DB_PASSWORD', ''),
+              'unix_socket' => env('DB_SOCKET', ''),
+              'charset' => 'utf8mb4',
+              'collation' => 'utf8mb4_unicode_ci',
+              'prefix' => '',
+              'prefix_indexes' => true,
+              'strict' => true,
+              'engine' => null,
+              'options' => extension_loaded('pdo_mysql') ? array_filter([
+                  PDO::MYSQL_ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
+              ]) : [],
+          ],
+
+          'pgsql' => [
+              'driver'   => 'pgsql',
+              'host'     => $db_config['host'],
+              'port'     => env('DB_PORT', '5432'),
+              'database' => $db_config['database'],
+              'username' => $db_config['username'],
+              'password' => $db_config['password'],
+              'charset' => 'utf8',
+              'prefix' => '',
+              'prefix_indexes' => true,
+              'schema' => 'public',
+              'sslmode' => 'prefer',
+          ],
+
+          'sqlsrv' => [
+              'driver' => 'sqlsrv',
+              'url' => env('DATABASE_URL'),
+              'host' => env('DB_HOST', 'localhost'),
+              'port' => env('DB_PORT', '1433'),
+              'database' => env('DB_DATABASE', 'forge'),
+              'username' => env('DB_USERNAME', 'forge'),
+              'password' => env('DB_PASSWORD', ''),
+              'charset' => 'utf8',
+              'prefix' => '',
+              'prefix_indexes' => true,
+          ],
+
+      ],
+
+      'migrations' => 'migrations',
+
+      'redis' => [
+
+          'client' => env('REDIS_CLIENT', 'phpredis'),
+
+          'options' => [
+              'cluster' => env('REDIS_CLUSTER', 'redis'),
+              'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+          ],
+
+          'default' => [
+              'url' => env('REDIS_URL'),
+              'host' => env('REDIS_HOST', '127.0.0.1'),
+              'password' => env('REDIS_PASSWORD', null),
+              'port' => env('REDIS_PORT', 6379),
+              'database' => env('REDIS_DB', 0),
+          ],
+
+          'cache' => [
+              'url' => env('REDIS_URL'),
+              'host' => env('REDIS_HOST', '127.0.0.1'),
+              'password' => env('REDIS_PASSWORD', null),
+              'port' => env('REDIS_PORT', 6379),
+              'database' => env('REDIS_CACHE_DB', 1),
+          ],
+
+      ],
+
+  ];
+  ```
+- 4.Git 版本控制，并提交代码
+  ```
+  $ git add -A
+  $ git commit -m "6.7 根据环境配置不同的数据库"
+  $ git push
+  ```
