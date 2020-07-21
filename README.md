@@ -1250,7 +1250,7 @@
       <script src="{{ mix('js/app.js') }}"></script>
     </body>
     ```
-  - 2.2 现在尝试再次点击导航栏下拉菜单，能发现它已经能够正常工作。
+  - 2.3 现在尝试再次点击导航栏下拉菜单，能发现它已经能够正常工作。
 - 3.注册后自动登录 Auth::login($user);  
   app/Http/Controllers/UsersController.php
   ```
@@ -1279,4 +1279,19 @@
   ```
   $ git add -A
   $ git commit -m "7.3 登录成功后导航逻辑及自动登录"
+  ```
+### 7.4 退出
+- 1.退出 app/Http/Controllers/SessionsController.php
+  ```
+  public function destroy()
+  {
+      Auth::logout();
+      session()->flash('success', '您已成功退出！');
+      return redirect('login');
+  }
+  ```
+- 2.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "7.4 用户退出登录"
   ```
