@@ -1140,7 +1140,7 @@
       }
   }
   ```
-  - attempt() 方法会接收一个数组来作为第一个参数，该参数提供的值将用于寻找数据库中的用户数据。因此在上面的例子中，attempt 方法执行的代码逻辑如下：
+  - attempt() 方法会接收一个数组来作为第一个参数，该参数提供的值将用于寻找数据库中的用户数据；第二个参数为是否为用户开启『记住我』功能的布尔值。因此在上面的例子中，attempt 方法执行的代码逻辑如下：
     - 1.使用 email 字段的值在数据库中查找；
     - 2.如果用户被找到：
       - 1). 先将传参的 password 值进行哈希加密，然后与数据库中 password 字段中已加密的密码进行匹配；
@@ -1294,4 +1294,47 @@
   ```
   $ git add -A
   $ git commit -m "7.4 用户退出登录"
+  ```
+### 7.5 记住我
+- 1.记住我
+  - 使用了『记住我』功能，则登录状态会被延长到五年。
+  - 没有使用『记住我』功能，则登录状态默认只会被记住两个小时。
+- 2.修改登录视图，加上『记住我』复选框  
+  resources/views/sessions/create.blade.php
+  ```
+  <div class="form-group">
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" name="remember" id="exampleCheck1">
+      <label class="form-check-label" for="exampleCheck1">记住我</label>
+    </div>
+  </div>
+
+  <button type="submit" class="btn btn-primary">登录</button>
+  ```
+- 3.修改会话控制器中的 store 方法  
+  app/Http/Controllers/SessionsController.php
+  ```
+  public function store(Request $request)
+  {
+      $credentials = $this->validate($request, [
+          'email' => 'required|email|max:255',
+          'password' => 'required'
+      ]);
+
+      if (Auth::attempt($credentials, $request->has('remember'))) {
+          session()->flash('success', '欢迎回来！');
+          return redirect()->route('users.show', [Auth::user()]);
+      } else {
+          session()->flash('danger', '很抱歉，您的邮箱和密码不匹配');
+          return redirect()->back()->withInput();
+      }
+  }
+  ```
+  - Auth::attempt() 方法可接收两个参数，第一个参数为需要进行用户身份认证的数组，第二个参数为是否为用户开启『记住我』功能的布尔值。
+- 4.Git 版本控制 及合并提交
+  ```
+  $ git add -A
+  $ git commit -m "7.5 登录时记住我"
+  $ git merge login-logout
+  $ git push
   ```
