@@ -1335,6 +1335,7 @@
   ```
   $ git add -A
   $ git commit -m "7.5 登录时记住我"
+  $ git checkout master
   $ git merge login-logout
   $ git push
   ```
