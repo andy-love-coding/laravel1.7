@@ -1098,3 +1098,95 @@
   $ git commit -m "6.7 根据环境配置不同的数据库"
   $ git push
   ```
+## 7 会话管理
+### 7.2 会话
+- 1.新建分支
+  ```
+  $ git checkout master
+  $ git checkout -b login-logout
+  ```
+- 2.路由 routes/web.php
+  ```
+  Route::get('login', 'SessionsController@create')->name('login');
+  Route::post('login', 'SessionsController@store')->name('login');
+  Route::delete('logout', 'SessionsController@destroy')->name('logout');
+  ```
+- 3.会话控制器 app/Http/Controllers/SessionsController.php
+  ```
+  $ php artisan make:controller SessionsController
+  ```
+  app/Http/Controllers/SessionsController.php
+  ```
+  use Auth;
+  ...
+  public function create()
+  {
+      return view('sessions.create');
+  }
+
+  public function store(Request $request)
+  {
+      $credentials = $this->validate($request, [
+          'email' => 'required|email|max:255',
+          'password' => 'required'
+      ]);
+
+      if (Auth::attempt($credentials)) {
+          session()->flash('success', '欢迎回来！');
+          return redirect()->route('users.show', [Auth::user()]);
+      } else {
+          session()->flash('danger', '很抱歉，您的邮箱和密码不匹配');
+          return redirect()->back()->withInput();
+      }
+  }
+  ```
+  - attempt() 方法会接收一个数组来作为第一个参数，该参数提供的值将用于寻找数据库中的用户数据。因此在上面的例子中，attempt 方法执行的代码逻辑如下：
+    - 1.使用 email 字段的值在数据库中查找；
+    - 2.如果用户被找到：
+      - 1). 先将传参的 password 值进行哈希加密，然后与数据库中 password 字段中已加密的密码进行匹配；
+      - 2). 如果匹配后两个值完全一致，会创建一个『会话』给通过认证的用户。会话在创建的同时，也会种下一个名为 laravel_session 的 HTTP Cookie，以此 Cookie 来记录用户登录状态，最终返回 true；
+      - 3). 如果匹配后两个值不一致，则返回 false；
+    - 3.如果用户未找到，则返回 false。
+- 4.登录视图 resources/views/sessions/create.blade.php
+  ```
+  @extends('layouts.default')
+  @section('title', '登录')
+
+  @section('content')
+  <div class="offset-md-2 col-md-8">
+    <div class="card ">
+      <div class="card-header">
+        <h5>登录</h5>
+      </div>
+      <div class="card-body">
+        @include('shared._errors')
+
+        <form method="POST" action="{{ route('login') }}">
+            {{ csrf_field() }}
+
+            <div class="form-group">
+              <label for="email">邮箱：</label>
+              <input type="text" name="email" class="form-control" value="{{ old('email') }}">
+            </div>
+
+            <div class="form-group">
+              <label for="password">密码：</label>
+              <input type="password" name="password" class="form-control" value="{{ old('password') }}">
+            </div>
+
+            <button type="submit" class="btn btn-primary">登录</button>
+        </form>
+
+        <hr>
+
+        <p>还没账号？<a href="{{ route('signup') }}">现在注册！</a></p>
+      </div>
+    </div>
+  </div>
+  @stop
+  ```
+- 5.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "7.2 创建会话"
+  ```
