@@ -1339,3 +1339,110 @@
   $ git merge login-logout
   $ git push
   ```
+## 8 用户 CRUD
+### 8.2 更新用户
+- 1.新建一个分支
+  ```
+  $ git checkout master
+  $ git checkout -b user-crud
+  ```
+- 2.控制器 app/Http/Controllers/UsersController.php
+  ```
+  public function edit(User $user)
+  {
+      return view('users.edit', compact('user'));
+  }
+
+  public function update(User $user, Request $request)
+  {
+      $this->validate($request, [
+          'name' => 'required|max:50',
+          'password' => 'nullable|confirmed|min:6'
+      ]);
+
+      $data = [];
+      $data['name'] = $request->name;
+      if ($request->password) {
+          $data['password'] = bcrypt($request->password);
+      }
+      $user->update($data);
+
+      session()->flash('success', '个人资料更新成功！');
+
+      return redirect()->route('users.show', $user);
+  }
+  ```
+- 3.辩解用户的视图 resources/views/users/edit.blade.php
+  ```
+  @extends('layouts.default')
+  @section('title', '更新个人资料')
+
+  @section('content')
+  <div class="offset-md-2 col-md-8">
+    <div class="card ">
+      <div class="card-header">
+        <h5>更新个人资料</h5>
+      </div>
+        <div class="card-body">
+
+          @include('shared._errors')
+
+          <div class="gravatar_edit">
+            <a href="http://gravatar.com/emails" target="_blank">
+              <img src="{{ $user->gravatar('200') }}" alt="{{ $user->name }}" class="gravatar"/>
+            </a>
+          </div>
+
+          <form method="POST" action="{{ route('users.update', $user->id )}}">
+              {{ method_field('PATCH') }}
+              {{ csrf_field() }}
+
+              <div class="form-group">
+                <label for="name">名称：</label>
+                <input type="text" name="name" class="form-control" value="{{ $user->name }}">
+              </div>
+
+              <div class="form-group">
+                <label for="email">邮箱：</label>
+                <input type="text" name="email" class="form-control" value="{{ $user->email }}" disabled>
+              </div>
+
+              <div class="form-group">
+                <label for="password">密码：</label>
+                <input type="password" name="password" class="form-control" value="{{ old('password') }}">
+              </div>
+
+              <div class="form-group">
+                <label for="password_confirmation">确认密码：</label>
+                <input type="password" name="password_confirmation" class="form-control" value="{{ old('password_confirmation') }}">
+              </div>
+
+              <button type="submit" class="btn btn-primary">更新</button>
+          </form>
+      </div>
+    </div>
+  </div>
+  @stop
+  ```
+- 3.视图样式优化 resources/sass/app.scss
+  ```
+  /* Users edit */
+
+  .gravatar_edit {
+    margin: 15px auto;
+    text-align: center;
+    .gravatar {
+      float: none;
+      max-width: 100px;
+    }
+  }
+  ```
+- 4.给编辑页面加上入口 resources/views/layouts/_header.blade.php
+  ```
+  <a class="dropdown-item" href="{{ route('users.edit', Auth::user()) }}">编辑资料</a>
+  ```
+-5.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "8.2 更改用户资料"
+  ```
