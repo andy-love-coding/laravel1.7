@@ -882,5 +882,56 @@
   $ git add -A
   $ git commit -m "6.5 错误信息 添加语言包"
   ```
+### 6.6 注册成功
+- 1.保存用户并重定向 app/Http/Controllers/UsersController.php
+  ```
+  public function store(Request $request)
+  {
+      $this->validate($request, [
+          'name' => 'required|unique:users|max:50',
+          'email' => 'required|email|unique:users|max:255',
+          'password' => 'required|confirmed|min:6'
+      ], [
+            'name.required' => '名字都不写，想上天吗？',
+      ]);
 
+      $user = User::create([
+          'name' => $request->name,
+          'email' => $request->email,
+          'password' => bcrypt($request->password),
+      ]);
 
+      session()->flash('success', '欢迎，您将在这里开启一段新的旅程~');
+      return redirect()->route('users.show', [$user]);
+  }
+  ```
+- 2.消息提示视图 resources/views/shared/_messages.blade.php
+  ```
+  @foreach (['danger', 'warning', 'success', 'info'] as $msg)
+    @if(session()->has($msg))
+      <div class="flash-message">
+        <p class="alert alert-{{ $msg }}">
+          {{ session()->get($msg) }}
+        </p>
+      </div>
+    @endif
+  @endforeach
+  ```
+- 3.引入消息提示视图 resources/views/layouts/default.blade.php
+  ```
+  <div class="container">
+    <div class="offset-md-1 col-md-10">
+      @include('shared._messages')
+      @yield('content')
+      @include('layouts._footer')
+    </div>
+  </div>
+  ```
+- 4.Git 版本控制，并合并提交
+  ```
+  $ git add -A
+  $ git commit -m "6.6 完成用户注册功能 全局消息提示"
+  $ git checkout master
+  $ git merge sign-up
+  $ git push
+  ```
