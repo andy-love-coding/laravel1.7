@@ -1593,3 +1593,140 @@
   $ git add -A
   $ git commit -m "8.3 权限系统 授权策略 中间件auth guest"
   ```
+### 8.4 用户列表
+- 1.控制器(分页) app/Http/Controllers/UsersController.php
+  ```
+  public function __construct()
+  {
+      // except 黑名单排除不需要登录的，其余都需要登录
+      $this->middleware('auth', [
+          'except' => ['show', 'create', 'store', 'index']
+      ]);
+      ...
+  }
+
+  public function index()
+  {
+      $users = User::paginate(10); // 分页，每页10条
+      return view('users.index', compact('users'));
+  } 
+  ```
+  - paginate() 分页数据
+- 2.视图(分页) resources/views/users/index.blade.php
+  ```
+  @extends('layouts.default')
+  @section('title', '所有用户')
+
+  @section('content')
+  <div class="offset-md-2 col-md-8">
+    <h2 class="mb-4 text-center">所有用户</h2>
+    <div class="list-group list-group-flush">
+      @foreach ($users as $user)
+        @include('users._user')
+      @endforeach
+    </div>
+
+    <div class="mt-3">
+      {!! $users->render() !!}
+    </div>
+  </div>
+  @stop
+  ```
+  - 局部视图 resources/views/users/_user.blade.php
+    ```
+    <div class="list-group-item">
+      <img class="mr-3" src="{{ $user->gravatar() }}" alt="{{ $user->name }}" width=32>
+      <a href="{{ route('users.show', $user) }}">
+        {{ $user->name }}
+      </a>
+    </div>
+    ```
+  - 分页 渲染分页视图的代码必须使用 {!! !!} 语法，而不是 {{　}}，这样生成 HTML 链接才不会被转义.
+    ```
+    控制器中：
+      $users = User::paginate(10); // 分页，每页10条
+      return view('users.index', compact('users'));
+    视图中：
+      <div class="mt-3">
+        {!! $users->render() !!}
+      </div>
+    ```
+- 3.用户列表入口 resources/views/layouts/_header.blade.php
+  ```
+  <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}">用户列表</a></li>
+  ```
+- 4.填充用户假数据
+  - 4.1 模型工厂 (模型工厂造模型) database/factories/UserFactory.php
+    ```
+    <?php
+
+    use App\Models\User;
+    use Illuminate\Support\Str;
+    use Faker\Generator as Faker;
+
+    $factory->define(User::class, function (Faker $faker) {
+        $date_time = $faker->date . ' ' . $faker->time;
+        return [
+            'name' => $faker->name,
+            'email' => $faker->unique()->safeEmail,
+            'email_verified_at' => now(),
+            'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+            'remember_token' => Str::random(10),
+            'created_at' => $date_time,
+            'updated_at' => $date_time,
+        ];
+    });
+    ```
+  - 4.2 数据填充
+    - 生成填充文件
+      ```
+      $ php artisan make:seeder UsersTableSeeder
+      ```
+    - 编写填充文件 database/seeds/UsersTableSeeder.php
+      ```
+      <?php
+
+      use Illuminate\Database\Seeder;
+      use App\Models\User;
+
+      class UsersTableSeeder extends Seeder
+      {
+          public function run()
+          {
+              $users = factory(User::class)->times(50)->make();
+              User::insert($users->makeVisible(['password', 'remember_token'])->toArray());
+
+              $user = User::find(1);
+              $user->name = 'Summer';
+              $user->email = 'summer@example.com';
+              $user->save();
+          }
+      }
+      ```
+      - makeVisible() 方法临时显示 User 模型里指定的隐藏属性 $hidden，接着我们使用了 insert 方法来将生成假用户列表数据批量插入到数据库中
+    - 调用填充文件 database/seeds/DatabaseSeeder.php
+      ```
+      public function run()
+      {
+          $this->call(UsersTableSeeder::class);
+      }
+      ```
+  - 4.3 重置数据库
+    ```
+    $ php artisan migrate:refresh
+    $ php artisan db:seed
+    ```
+    以上命令等价于
+    ```
+    $ php artisan migrate:refresh --seed
+    ```
+    - 如果如果我们要单独指定执行 UserTableSeeder 数据库填充文件，则可以这么做：
+      ```
+      $ php artisan migrate:refresh
+      $ php artisan db:seed --class=UsersTableSeeder
+      ```
+- 5.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "8.4 查看用户列表 模型工厂 迁移文件 数据填充 分页"
+  ```
