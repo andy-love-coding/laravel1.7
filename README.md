@@ -1437,12 +1437,159 @@
     }
   }
   ```
+  编译样式文件
+  ```
+  $ npm run dev
+  ```
 - 4.给编辑页面加上入口 resources/views/layouts/_header.blade.php
   ```
   <a class="dropdown-item" href="{{ route('users.edit', Auth::user()) }}">编辑资料</a>
   ```
--5.Git 版本控制
+- 5.Git 版本控制
   ```
   $ git add -A
   $ git commit -m "8.2 更改用户资料"
+  ```
+### 8.3 权限系统
+- 1.必须登录：app/Http/Controllers/UsersController.php
+  ```
+  public function __construct()
+  {
+      // except 黑名单排除不需要登录的，其余都需要登录
+      $this->middleware('auth', [            
+          'except' => ['show', 'create', 'store']
+      ]);
+  }
+  ```
+- 2.授权策略：只能自己编辑家自己 ()
+  - 2.1 创建授权策略
+    ```
+    $ php artisan make:policy UserPolicy
+    ```
+    app/Policies/UserPolicy.php
+    ```
+    // update 方法接收两个参数，第一个参数默认为当前登录用户实例，第二个参数则为要进行授权的用户实例
+    // 使用授权策略时，我们 不需要 传递当前登录用户至该方法内，因为框架会自动加载当前登录用户，即不用传递 $currentUser
+    public function update(User $currentUser, User $user)
+    {
+        // 只有自己才能更新自己
+        return $currentUser->id === $user->id;
+    }
+    ```
+  - 2.2 注册授权策略 app/Providers/AuthServiceProvider.php
+    ```
+    public function boot()
+    {
+        $this->registerPolicies();
+        // 修改策略自动发现的逻辑
+        Gate::guessPolicyNamesUsing(function ($modelClass) {
+            // 动态返回模型对应的策略名称，如：// 'App\Models\User' => 'App\Policies\UserPolicy',
+            return 'App\Policies\\'.class_basename($modelClass).'Policy';
+        });
+    }
+    ```
+  - 2.3 使用授权策略 app/Http/Controllers/UsersController.php
+    ```
+    public function edit(User $user)
+    {
+        // authorize 方法接收两个参数，第一个为授权策略的名称，第二个为进行授权验证的数据。
+        $this->authorize('update', $user);
+        return view('users.edit', compact('user'));
+    }
+
+    public function update(User $user, Request $request)
+    {
+        $this->authorize('update', $user);
+        $this->validate($request, [
+            'name' => 'required|max:50',
+            'password' => 'nullable|confirmed|min:6'
+        ]);
+
+        $data = [];
+        $data['name'] = $request->name;
+        if ($request->password) {
+            $data['password'] = bcrypt($request->password);
+        }
+        $user->update($data);
+
+        session()->flash('success', '个人资料更新成功！');
+
+        return redirect()->route('users.show', $user->id);
+    }
+    ```
+    - 测试：用 id 为 1 的用户登录，访问 id 为 2 的用户的编辑页面，系统将报 “403 unauthorized” 错误
+- 3.友好转向 intended()  
+  app/Http/Controllers/SessionsController.php
+  ```
+  public function store(Request $request)
+  {
+      $credentials = $this->validate($request, [
+          'email' => 'required|email|max:255',
+          'password' => 'required'
+      ]);
+
+      if (Auth::attempt($credentials, $request->has('remember'))) {
+          // 登录成功
+          session()->flash('success', '欢迎回来！');
+          // 登录后友好转向 intended() 
+          // 重定向到上一次请求尝试访问的页面上，并接收一个默认跳转地址参数，当上一次请求记录为空时，跳转到默认地址上。
+          $fallback = route('users.show', Auth::user());
+          return redirect()->intended($fallback);
+      } else {
+          // 登录失败
+          session()->flash('danger', '很抱歉，您的邮箱和密码不匹配');
+          return redirect()->back()->withInput();
+      }
+  }
+  ```
+  - redirect() 实例提供了一个 intended() 方法，该方法可将页面重定向到上一次请求尝试访问的页面上，并接收一个默认跳转地址参数，当上一次请求记录为空时，跳转到默认地址上。
+- 4.必须为游客：「登录」、「注册」必须为访客
+  - 4.1「登录」时必须是游客 app/Http/Controllers/SessionsController.php
+    ```
+    public function __construct()
+    {
+        // 「登录」时必须是游客
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+    ```
+  - 4.2 「注册」时必须是游客 app/Http/Controllers/UsersController.php
+    ```
+    public function __construct()
+    {
+        // except 黑名单排除不需要登录的，其余都需要登录
+        $this->middleware('auth', [
+            'except' => ['show', 'create', 'store']
+        ]);
+
+        // only 白名单设定注册必须为 游客模式（非登录）
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+    ```
+  - 4.3 guest 验证未通过的默认跳转
+    - guest 验证未通过，默认跳转到页面 /home ，因我们并没有此页面，所以会报错 404 找不到页面
+    - 增加提示 app/Http/Middleware/RedirectIfAuthenticated.php
+      ```
+      public function handle($request, Closure $next, $guard = null)
+      {
+          if (Auth::guard($guard)->check()) {
+              session()->flash('info', '您已登录，无需再次操作。');
+              return redirect(RouteServiceProvider::HOME);
+          }
+
+          return $next($request);
+      }
+      ```
+    - 修改默认跳转 默认跳转：app/Providers/RouteServiceProvider.php
+      ```
+      // public const HOME = '/home';
+      public const HOME = '/'; // 默认跳转由 '/home' 改为 '/'
+      ```
+- 5.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "8.3 权限系统 授权策略 中间件auth guest"
   ```
