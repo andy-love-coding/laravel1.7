@@ -304,7 +304,7 @@
   $ php artisan migrate --help
   ```
 ## 4 [优化页面](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
-### 4.2 样式美化
+### 4.2 [样式美化](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.新建分支
   ```
   $ git checkout master
@@ -433,11 +433,11 @@
   $ git add -A
   $ git commit -m "4.2 初始化样式 集成 Bootstrap"
   ```
-### 4.3 前端工作流
+### 4.3 [前端工作流](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - [Laravel 前端工作流](https://learnku.com/courses/laravel-essential-training/6.x/laravel-front-end-workflow/5454)
   - SASS 语法基础
   - NPM, Yarn, Laravel Mix
-### 4.4 浏览器缓存问题
+### 4.4 [浏览器缓存问题](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.问题描述
   - 现代化的浏览器，会对静态文件进行缓存，静态文件在本课程的范畴内，指的是 .css 、.js 后缀的文件。开发时，你明明修改了样式，但是刷新浏览器却看不见变化，然后你就来回不断地修改你的样式文件，做各种测试，浏览器页面仍然一成不变。
 - 2.解决方案  
@@ -457,7 +457,7 @@
   $ git add -A
   $ git commit -m "4.4 静态文件浏览器缓存问题 .version() mix()"
   ```
-### 4.5 局部视图
+### 4.5 [局部视图](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.头部和底部视图  
   resources/views/layouts/_header.blade.php
   ```
@@ -540,7 +540,7 @@
   $ git add -A
   $ git commit -m "4.5 切割头部和尾部子视图"
   ```
-### 4.6 布局中的链接(命名路由)
+### 4.6 [布局中的链接(命名路由)](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.给路由命名 routes/web.php
   ```
   <?php
@@ -567,7 +567,7 @@
   $ git add -A
   $ git commit -m "4.6 命名路由"
   ```
-### 4.7 用户注册页面
+### 4.7 [用户注册页面](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.注册路由 routes/web.php
   ```
   Route::get('signup', 'UsersController@create')->name('signup');
@@ -608,22 +608,22 @@
   $ git push
   ```
 ## 5 [用户模型](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
-### 5.1 章节说明
+### 5.1 [章节说明](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.准备好舞台
   ```
   $ git checkout master
   $ git checkout -b modeling-users
   ```
-### 5.2 数据库迁移
+### 5.2 [数据库迁移](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.[数据库迁移](https://learnku.com/courses/laravel-essential-training/6.x/database-migration/5461)
   - [可用的字段类型](https://learnku.com/docs/laravel/6.x/migrations/5173#b419dd)
-### 5.3 查看数据库表
+### 5.3 [查看数据库表](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.[数据库工具 SequelPro](https://learnku.com/courses/laravel-essential-training/6.x/check-the-database-table/5462#679a96)
 - 2.执行迁移（生成表）
   ```
   $ php artisan migrate
   ```
-### 5.4 模型文件
+### 5.4 [模型文件](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.使用 `App\Models` 命名空间
   - 1.1 新建文件夹，并移动 `User.php` 文件
     ```
@@ -671,7 +671,7 @@
     ```
     protected $table = 'my_articles';
     ```
-### 5.5 创建用户对象(Tinker)
+### 5.5 [创建用户对象(Tinker)](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.进入 Tinker 环境
   ```
   $ php artisan tinker
@@ -680,7 +680,7 @@
   ```
   >>> App\Models\User::create(['name'=> 'Summer', 'email'=>'summer@example.com','password'=>bcrypt('password')])
   ```
-### 5.6 查找用户对象(测试)
+### 5.6 [查找用户对象(测试)](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.引用 `App\Models\User` Eloquent 模型类
   ```
   >>> use App\Models\User
@@ -707,7 +707,7 @@
   ```
   >>> User::all()
   ```
-### 5.7 更新用户对象(测试)
+### 5.7 [更新用户对象(测试)](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.更新用户对象
   ```
   >>> $user = User::first()
@@ -724,7 +724,7 @@
     >>> $user->update(['name'=>'Summer'])
     >>> User::first() // 查看：已经更新
     ```
-### 5.8 小结
+### 5.8 [小结](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.将代码切回到主分支中进行合并，并提交
   ```
   $ git checkout master
@@ -732,7 +732,7 @@
   $ git push
   ```
 ## 6 [用户注册](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
-### 6.2 显示用户信息
+### 6.2 [显示用户信息](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 0.新建一个分支
   ```
   $ git checkout master
@@ -842,7 +842,7 @@
   $ git add -A
   $ git commit -m "6.2 用户显示页面 用户局部视图include"
   ```
-### 6.3 注册表单
+### 6.3 [注册表单](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.表单构建 resources/views/users/create.blade.php
   ```
   @extends('layouts.default')
@@ -889,7 +889,7 @@
   $ git add -A
   $ git commit -m "6.3 用户注册表单"
   ```
-### 6.4 用户数据验证
+### 6.4 [用户数据验证](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.用户数据验证 app/Http/Controllers/UsersController.php
   ```
   public function store(Request $request)
@@ -918,7 +918,7 @@
   $ git add -A
   $ git commit -m "6.4 增加 CSRF 验证"
   ```
-### 6.5 错误消息
+### 6.5 [错误消息](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.错误消息局部视图 resources/views/shared/_errors.blade.php
   ```
   @if (count($errors) > 0)
@@ -960,7 +960,7 @@
   $ git add -A
   $ git commit -m "6.5 错误信息 添加语言包"
   ```
-### 6.6 注册成功
+### 6.6 [注册成功](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.保存用户并重定向 app/Http/Controllers/UsersController.php
   ```
   public function store(Request $request)
@@ -1013,7 +1013,7 @@
   $ git merge sign-up
   $ git push
   ```
-### 6.7 在 Heroku 上使用 PostgreSQL
+### 6.7 [在 Heroku 上使用 PostgreSQL](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.[使用多个数据库的配置](https://learnku.com/courses/laravel-essential-training/6.x/using-postgresql-on-heroku/5474)
 - 2.设置环境变量 IS_IN_HEROKU
   - 如果环境为本地环境，则使用 MySQL 数据库，若为 Heroku 环境，则使用 PostgreSQL 数据库。我们可以通过为 Heroku 新增一个 IS_IN_HEROKU 配置项来判断应用是否运行在 Heroku 上。
@@ -1177,7 +1177,7 @@
   $ git push
   ```
 ## 7 [会话管理](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
-### 7.2 会话
+### 7.2 [会话](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.新建分支
   ```
   $ git checkout master
@@ -1268,7 +1268,7 @@
   $ git add -A
   $ git commit -m "7.2 创建会话"
   ```
-### 7.3 用户登录
+### 7.3 [用户登录](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.修改导航视图 resources/views/layouts/_header.blade.php
   ```
   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
@@ -1358,7 +1358,7 @@
   $ git add -A
   $ git commit -m "7.3 登录成功后导航逻辑及自动登录"
   ```
-### 7.4 退出
+### 7.4 [退出](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.退出 app/Http/Controllers/SessionsController.php
   ```
   public function destroy()
@@ -1373,7 +1373,7 @@
   $ git add -A
   $ git commit -m "7.4 用户退出登录"
   ```
-### 7.5 记住我
+### 7.5 [记住我](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.记住我
   - 使用了『记住我』功能，则登录状态会被延长到五年。
   - 没有使用『记住我』功能，则登录状态默认只会被记住两个小时。
@@ -1418,7 +1418,7 @@
   $ git push
   ```
 ## 8 [用户 CRUD](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
-### 8.2 更新用户
+### 8.2 [更新用户](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.新建一个分支
   ```
   $ git checkout master
@@ -1528,7 +1528,7 @@
   $ git add -A
   $ git commit -m "8.2 更改用户资料"
   ```
-### 8.3 权限系统
+### 8.3 [权限系统](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.必须登录：app/Http/Controllers/UsersController.php
   ```
   public function __construct()
@@ -1671,7 +1671,7 @@
   $ git add -A
   $ git commit -m "8.3 权限系统 授权策略 中间件auth guest"
   ```
-### 8.4 用户列表
+### 8.4 [用户列表](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.控制器(分页) app/Http/Controllers/UsersController.php
   ```
   public function __construct()
@@ -1808,7 +1808,7 @@
   $ git add -A
   $ git commit -m "8.4 查看用户列表 模型工厂 迁移文件 数据填充 分页"
   ```
-### 8.5 删除用户
+### 8.5 [删除用户](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.加管理员字段
   - 1.1 生成迁移文件来加管理员字段
     ```
@@ -1897,7 +1897,7 @@
   $ git push
   ```
 ## 9 [邮件发送](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
-### 9.2 账户激活
+### 9.2 [账户激活](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.新建分支
   ```
   $ git checkout master
@@ -2091,7 +2091,7 @@
   $ git add -A
   $ git commit -m "9.2 用户激活 boot中做模型监听"  
   ```
-### 9.3 密码重置
+### 9.3 [密码重置](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.思路说明：重置密码控制器逻辑框架已经写好，我们只需配置4个路由、1个入口、2个视图即可。
 - 2.重置密码路由
   ```
@@ -2222,7 +2222,7 @@
   $ git add -A
   $ git commit -m "9.3 重置密码"
   ```
-### 9.4 生产环境中发送邮件
+### 9.4 [生产环境中发送邮件](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.开启QQ邮箱的SMTP，并复制『授权码』，授权码将作为我们的密码使用
 - 2.邮箱配置
   ```
