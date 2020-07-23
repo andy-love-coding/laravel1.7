@@ -2701,7 +2701,7 @@
   $ git commit -m "11.2 粉丝数据表"
   ```
 ### 11.3 社交信息统计
-1.填充「关注」的假数据
+- 1.填充「关注」的假数据
   ```
   $ php artisan make:seeder FollowersTableSeeder
   ```
@@ -2862,5 +2862,80 @@
   ```
   $ git add -A
   $ git commit -m "11.3 社交统计信息"
+  ```
+### 11.4 粉丝页面
+- 1.路由 routes/web.php
+  ```
+  Route::get('/users/{user}/followings', 'UsersController@followings')->name('users.followings');
+  Route::get('/users/{user}/followers', 'UsersController@followers')->name('users.followers');
+  ```
+- 2.入口链接 resources/views/shared/_stats.blade.php
+  ```
+  <a href="{{ route('users.followings', $user->id) }}">
+    <strong id="following" class="stat">
+      {{ count($user->followings) }}
+    </strong>
+    关注
+  </a>
+  <a href="{{ route('users.followers', $user->id) }}">
+    <strong id="followers" class="stat">
+      {{ count($user->followers) }}
+    </strong>
+    粉丝
+  </a>
+  <a href="{{ route('users.show', $user->id) }}">
+    <strong id="statuses" class="stat">
+      {{ $user->statuses()->count() }}
+    </strong>
+    微博
+  </a>
+  ```
+- 3.控制器 app/Http/Controllers/UsersController.php
+  ```
+  public function followings(User $user)
+  {
+      $users = $user->followings()->paginate(30);
+      $title = $user->name . '关注的人';
+      return view('users.show_follow', compact('users', 'title'));
+  }
+
+  public function followers(User $user)
+  {
+      $users = $user->followers()->paginate(30);
+      $title = $user->name . '的粉丝';
+      return view('users.show_follow', compact('users', 'title'));
+  }
+  ```
+- 4.视图（博主列表和粉丝列表共用一个视图） resources/views/users/show_follow.blade.php
+  ```
+  @extends('layouts.default')
+  @section('title', $title)
+
+  @section('content')
+  <div class="offset-md-2 col-md-8">
+    <h2 class="mb-4 text-center">{{ $title }}</h2>
+
+    <div class="list-group list-group-flush">
+      @foreach ($users as $user)
+        <div class="list-group-item">
+          <img class="mr-3" src="{{ $user->gravatar() }}" alt="{{ $user->name }}" width=32>
+          <a href="{{ route('users.show', $user) }}">
+            {{ $user->name }}
+          </a>
+        </div>
+
+      @endforeach
+    </div>
+
+    <div class="mt-3">
+      {!! $users->render() !!}
+    </div>
+  </div>
+  @stop
+  ```
+- 5.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "11.4 关注和粉丝列表页面"
   ```
   
