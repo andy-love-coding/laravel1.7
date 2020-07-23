@@ -2986,7 +2986,7 @@
   </section>
   <hr>
   ```
-5.控制器 app/Http/Controllers/FollowersController.php
+- 5.控制器 app/Http/Controllers/FollowersController.php
   ```
   $ php artisan make:controller FollowersController
   ```
@@ -3033,4 +3033,32 @@
   ```
   $ git add -A
   $ git commit -m "11.5 关注按钮"
+  ```
+### 11.6 动态流（显示所有关注用户的微博动态）
+- 1.app/Models/User.php
+  ```
+  // 动态流
+  public function feed()
+  {
+      // 自己的动态流
+      // return $this->statuses()
+      //                 ->orderBy('created_at', 'desc');
+
+      // 自己和关注用户的动态流
+      $user_ids = $this->followings->pluck('id')->toArray();
+      array_push($user_ids, $this->id);
+      return Status::whereIn('user_id', $user_ids)
+                              ->with('user')
+                              ->orderBy('created_at', 'desc');
+  }
+  ```
+  - [查询构建器](https://learnku.com/docs/laravel/6.x/queries/5171) whereIn 方法取出所有用户的微博动态并进行倒序排序；
+  - [预加载](https://learnku.com/docs/laravel/6.x/eloquent-relationships/5177#eager-loading) with('user') 预加载方法，提前取出所有 $statuses 里面的 $user , 避免了 N+1 查找的问题。
+- 2.Git 版本控制，即合并提交
+  ```
+  $ git add -A
+  $ git commit -m "11.6 关注用户动态流"
+  $ git checkout master
+  $ git merge following-users
+  $ git push
   ```

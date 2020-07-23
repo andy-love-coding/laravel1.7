@@ -50,8 +50,15 @@ class User extends Authenticatable
 
     public function feed()
     {
-        return $this->statuses()
-                    ->orderBy('created_at', 'desc');
+        // return $this->statuses()
+        //             ->orderBy('created_at', 'desc');
+
+        // 自己和关注用户的动态流
+        $user_ids = $this->followings->pluck('id')->toArray();
+        array_push($user_ids, $this->id);
+        return Status::whereIn('user_id', $user_ids)
+                                ->with('user')
+                                ->orderBy('created_at', 'desc');
     }
 
     // 多对多关联语法：$this-> belongsToMany(关联表model，中间表表名，中间表中本model的关联ID，中间表中关联model的关联ID);
