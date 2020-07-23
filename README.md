@@ -1,83 +1,83 @@
 ## 目录
-- 3 [构建页面](https://github.com/andy-love-coding/laravel1.7#3-%E6%9E%84%E5%BB%BA%E9%A1%B5%E9%9D%A2)
-  - 3.2 [创建应用](https://github.com/andy-love-coding/laravel1.7#32-%E5%88%9B%E5%BB%BA%E5%BA%94%E7%94%A8)
+- [3 构建页面](https://github.com/andy-love-coding/laravel1.7#3-%E6%9E%84%E5%BB%BA%E9%A1%B5%E9%9D%A2)
+  - [3.2 创建应用](https://github.com/andy-love-coding/laravel1.7#32-%E5%88%9B%E5%BB%BA%E5%BA%94%E7%94%A8)
     - 修改 hosts 、新增站点
-  - 3.3 [静态页面布局](https://github.com/andy-love-coding/laravel1.7#33-%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2)
-  - 3.4 [Artisan 命令](https://github.com/andy-love-coding/laravel1.7#34-artisan-%E5%91%BD%E4%BB%A4)
-- 4 [优化页面](https://github.com/andy-love-coding/laravel1.7#4-%E4%BC%98%E5%8C%96%E9%A1%B5%E9%9D%A2)
-  - 4.2 [样式美化](https://github.com/andy-love-coding/laravel1.7#42-%E6%A0%B7%E5%BC%8F%E7%BE%8E%E5%8C%96)
+  - [3.3 静态页面布局](https://github.com/andy-love-coding/laravel1.7#33-%E9%9D%99%E6%80%81%E9%A1%B5%E9%9D%A2)
+  - [3.4 Artisan 命令](https://github.com/andy-love-coding/laravel1.7#34-artisan-%E5%91%BD%E4%BB%A4)
+- [4 优化页面](https://github.com/andy-love-coding/laravel1.7#4-%E4%BC%98%E5%8C%96%E9%A1%B5%E9%9D%A2)
+  - [4.2 样式美化](https://github.com/andy-love-coding/laravel1.7#42-%E6%A0%B7%E5%BC%8F%E7%BE%8E%E5%8C%96)
     - 2.设置前端扩展包镜像
     - 3.安装 Bootstrap
-  - 4.3 [前端工作流](https://github.com/andy-love-coding/laravel1.7#43-%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81)
-  - 4.4 [浏览器缓存问题](https://github.com/andy-love-coding/laravel1.7#44-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98)
-  - 4.5 [局部视图 (拆分布局视图)](https://github.com/andy-love-coding/laravel1.7#53-%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8)
-  - 4.6 [布局中的链接(命名路由)](https://github.com/andy-love-coding/laravel1.7#46-%E5%B8%83%E5%B1%80%E4%B8%AD%E7%9A%84%E9%93%BE%E6%8E%A5%E5%91%BD%E5%90%8D%E8%B7%AF%E7%94%B1)
-  - 4.7 [用户注册页面](https://github.com/andy-love-coding/laravel1.7#47-%E7%94%A8%E6%88%B7%E6%B3%A8%E5%86%8C%E9%A1%B5%E9%9D%A2)
-- 5 [用户模型](https://github.com/andy-love-coding/laravel1.7#5-%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9E%8B)
-  - 5.1 [章节说明](https://github.com/andy-love-coding/laravel1.7#51-%E7%AB%A0%E8%8A%82%E8%AF%B4%E6%98%8E)
-  - 5.2 [数据库迁移](https://github.com/andy-love-coding/laravel1.7#52-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%81%E7%A7%BB)
-  - 5.3 [查看数据库表（数据库查询工具 SequelPro）](https://github.com/andy-love-coding/laravel1.7#53-%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8)
-  - 5.4 [模型文件](https://github.com/andy-love-coding/laravel1.7#54-%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6)
+  - [4.3 前端工作流](https://github.com/andy-love-coding/laravel1.7#43-%E5%89%8D%E7%AB%AF%E5%B7%A5%E4%BD%9C%E6%B5%81)
+  - [4.4 浏览器缓存问题](https://github.com/andy-love-coding/laravel1.7#44-%E6%B5%8F%E8%A7%88%E5%99%A8%E7%BC%93%E5%AD%98%E9%97%AE%E9%A2%98)
+  - [4.5 局部视图 (拆分布局视图)](https://github.com/andy-love-coding/laravel1.7#53-%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8)
+  - [4.6 布局中的链接(命名路由)](https://github.com/andy-love-coding/laravel1.7#46-%E5%B8%83%E5%B1%80%E4%B8%AD%E7%9A%84%E9%93%BE%E6%8E%A5%E5%91%BD%E5%90%8D%E8%B7%AF%E7%94%B1)
+  - [4.7 用户注册页面](https://github.com/andy-love-coding/laravel1.7#47-%E7%94%A8%E6%88%B7%E6%B3%A8%E5%86%8C%E9%A1%B5%E9%9D%A2)
+- [5 用户模型](https://github.com/andy-love-coding/laravel1.7#5-%E7%94%A8%E6%88%B7%E6%A8%A1%E5%9E%8B)
+  - [5.1 章节说明](https://github.com/andy-love-coding/laravel1.7#51-%E7%AB%A0%E8%8A%82%E8%AF%B4%E6%98%8E)
+  - [5.2 数据库迁移](https://github.com/andy-love-coding/laravel1.7#52-%E6%95%B0%E6%8D%AE%E5%BA%93%E8%BF%81%E7%A7%BB)
+  - [5.3 查看数据库表（数据库查询工具 SequelPro）](https://github.com/andy-love-coding/laravel1.7#53-%E6%9F%A5%E7%9C%8B%E6%95%B0%E6%8D%AE%E5%BA%93%E8%A1%A8)
+  - [5.4 模型文件](https://github.com/andy-love-coding/laravel1.7#54-%E6%A8%A1%E5%9E%8B%E6%96%87%E4%BB%B6)
     - 使用 `App\Models` 命名空间
-  - 5.5 [创建用户对象(Tinker)](https://github.com/andy-love-coding/laravel1.7#55-%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E5%AF%B9%E8%B1%A1tinker)
-  - 5.6 [查找用户对象(测试)](https://github.com/andy-love-coding/laravel1.7#56-%E6%9F%A5%E6%89%BE%E7%94%A8%E6%88%B7%E5%AF%B9%E8%B1%A1%E6%B5%8B%E8%AF%95)
-  - 5.7 [更新用户对象(测试)](https://github.com/andy-love-coding/laravel1.7#57-%E6%9B%B4%E6%96%B0%E7%94%A8%E6%88%B7%E5%AF%B9%E8%B1%A1%E6%B5%8B%E8%AF%95)
-  - 5.8 [小结](https://github.com/andy-love-coding/laravel1.7#58-%E5%B0%8F%E7%BB%93)
-- 6 [用户注册](https://github.com/andy-love-coding/laravel1.7#6-%E7%94%A8%E6%88%B7%E6%B3%A8%E5%86%8C)
-  - 6.2 [显示用户信息](https://github.com/andy-love-coding/laravel1.7#62-%E6%98%BE%E7%A4%BA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF)
-  - 6.3 [注册表单](https://github.com/andy-love-coding/laravel1.7#63-%E6%B3%A8%E5%86%8C%E8%A1%A8%E5%8D%95)
-  - 6.4 [用户数据验证](https://github.com/andy-love-coding/laravel1.7#64-%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%E9%AA%8C%E8%AF%81)
+  - [5.5 创建用户对象(Tinker)](https://github.com/andy-love-coding/laravel1.7#55-%E5%88%9B%E5%BB%BA%E7%94%A8%E6%88%B7%E5%AF%B9%E8%B1%A1tinker)
+  - [5.6 查找用户对象(测试)](https://github.com/andy-love-coding/laravel1.7#56-%E6%9F%A5%E6%89%BE%E7%94%A8%E6%88%B7%E5%AF%B9%E8%B1%A1%E6%B5%8B%E8%AF%95)
+  - [5.7 更新用户对象(测试)](https://github.com/andy-love-coding/laravel1.7#57-%E6%9B%B4%E6%96%B0%E7%94%A8%E6%88%B7%E5%AF%B9%E8%B1%A1%E6%B5%8B%E8%AF%95)
+  - [5.8 小结](https://github.com/andy-love-coding/laravel1.7#58-%E5%B0%8F%E7%BB%93)
+- [6 用户注册](https://github.com/andy-love-coding/laravel1.7#6-%E7%94%A8%E6%88%B7%E6%B3%A8%E5%86%8C)
+  - [6.2 显示用户信息](https://github.com/andy-love-coding/laravel1.7#62-%E6%98%BE%E7%A4%BA%E7%94%A8%E6%88%B7%E4%BF%A1%E6%81%AF)
+  - [6.3 注册表单](https://github.com/andy-love-coding/laravel1.7#63-%E6%B3%A8%E5%86%8C%E8%A1%A8%E5%8D%95)
+  - [6.4 用户数据验证](https://github.com/andy-love-coding/laravel1.7#64-%E7%94%A8%E6%88%B7%E6%95%B0%E6%8D%AE%E9%AA%8C%E8%AF%81)
     - 1.表单数据验证
-  - 6.5 [错误消息](https://github.com/andy-love-coding/laravel1.7#65-%E9%94%99%E8%AF%AF%E6%B6%88%E6%81%AF)
+  - [6.5 错误消息](https://github.com/andy-love-coding/laravel1.7#65-%E9%94%99%E8%AF%AF%E6%B6%88%E6%81%AF)
     - 1.错误消息局部视图 (_errors.blade.php)
     - 3.添加语言包 laravel-lang:~3.0
-  - 6.6 [注册成功](https://github.com/andy-love-coding/laravel1.7#66-%E6%B3%A8%E5%86%8C%E6%88%90%E5%8A%9F)
+  - [6.6 注册成功](https://github.com/andy-love-coding/laravel1.7#66-%E6%B3%A8%E5%86%8C%E6%88%90%E5%8A%9F)
     - 2.全局销售提示视图 (_messages.blade.php)
-  - 6.7 [在 Heroku 上使用 PostgreSQL](https://github.com/andy-love-coding/laravel1.7#67-%E5%9C%A8-heroku-%E4%B8%8A%E4%BD%BF%E7%94%A8-postgresql)
+  - [6.7 在 Heroku 上使用 PostgreSQL](https://github.com/andy-love-coding/laravel1.7#67-%E5%9C%A8-heroku-%E4%B8%8A%E4%BD%BF%E7%94%A8-postgresql)
     - 1.使用多个数据库的配置
     - 3.自定义辅助函数
-- 7.[会话管理](https://github.com/andy-love-coding/laravel1.7#7-%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86)
-  - 7.2 [会话](https://github.com/andy-love-coding/laravel1.7#72-%E4%BC%9A%E8%AF%9D)
-  - 7.3 [用户登录](https://github.com/andy-love-coding/laravel1.7#73-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95)
+- [7.会话管理](https://github.com/andy-love-coding/laravel1.7#7-%E4%BC%9A%E8%AF%9D%E7%AE%A1%E7%90%86)
+  - [7.2 会话](https://github.com/andy-love-coding/laravel1.7#72-%E4%BC%9A%E8%AF%9D)
+  - [7.3 用户登录](https://github.com/andy-love-coding/laravel1.7#73-%E7%94%A8%E6%88%B7%E7%99%BB%E5%BD%95)
     - 1.伪造 DELETE 请求
     - 2.集成 Bootstrap 的 JavaScript 库
-  - 7.4 [退出](https://github.com/andy-love-coding/laravel1.7#74-%E9%80%80%E5%87%BA)
-  - 7.5 [记住我](https://github.com/andy-love-coding/laravel1.7#75-%E8%AE%B0%E4%BD%8F%E6%88%91)
-- 8.[用户 CRUD](https://github.com/andy-love-coding/laravel1.7#8-%E7%94%A8%E6%88%B7-crud)
-  - 8.2 [更新用户](https://github.com/andy-love-coding/laravel1.7#82-%E6%9B%B4%E6%96%B0%E7%94%A8%E6%88%B7)
-  - 8.3 [权限系统](https://github.com/andy-love-coding/laravel1.7#83-%E6%9D%83%E9%99%90%E7%B3%BB%E7%BB%9F)
+  - [7.4 退出](https://github.com/andy-love-coding/laravel1.7#74-%E9%80%80%E5%87%BA)
+  - [7.5 记住我](https://github.com/andy-love-coding/laravel1.7#75-%E8%AE%B0%E4%BD%8F%E6%88%91)
+- [8.用户 CRUD](https://github.com/andy-love-coding/laravel1.7#8-%E7%94%A8%E6%88%B7-crud)
+  - [8.2 更新用户](https://github.com/andy-love-coding/laravel1.7#82-%E6%9B%B4%E6%96%B0%E7%94%A8%E6%88%B7)
+  - [8.3 权限系统](https://github.com/andy-love-coding/laravel1.7#83-%E6%9D%83%E9%99%90%E7%B3%BB%E7%BB%9F)
     - 授权策略
     - 必须登录 必须为游客
     - 友好转向 intend()
-  - 8.4 [用户列表](https://github.com/andy-love-coding/laravel1.7#84-%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8)
+  - [8.4 用户列表](https://github.com/andy-love-coding/laravel1.7#84-%E7%94%A8%E6%88%B7%E5%88%97%E8%A1%A8)
     - 分页
     - 填充假数据
-  - 8.5 [删除用户](https://github.com/andy-love-coding/laravel1.7#85-%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7)
+  - [8.5 删除用户](https://github.com/andy-love-coding/laravel1.7#85-%E5%88%A0%E9%99%A4%E7%94%A8%E6%88%B7)
     - 1.用户迁移文件添加字段
-- 9 [邮件发送](https://github.com/andy-love-coding/laravel1.7#9-%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81)
-  - 9.2 [账户激活](https://github.com/andy-love-coding/laravel1.7#92-%E8%B4%A6%E6%88%B7%E6%BF%80%E6%B4%BB)
+- [9 邮件发送](https://github.com/andy-love-coding/laravel1.7#9-%E9%82%AE%E4%BB%B6%E5%8F%91%E9%80%81)
+  - [9.2 账户激活](https://github.com/andy-love-coding/laravel1.7#92-%E8%B4%A6%E6%88%B7%E6%BF%80%E6%B4%BB)
     - 2.3.添加字段 boot()中的 creating 监听事件
     - 4.发送邮件
-  - 9.3 [密码重置](https://github.com/andy-love-coding/laravel1.7#93-%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE)
-  - 9.4 [生产环境中发送邮件](https://github.com/andy-love-coding/laravel1.7#94-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%AD%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6)
-- 10 [微博 CRUD](https://github.com/andy-love-coding/laravel1.7#10-%E5%BE%AE%E5%8D%9A-crud)
-  - 10.2 [微博模型](https://github.com/andy-love-coding/laravel1.7#102-%E5%BE%AE%E5%8D%9A%E6%A8%A1%E5%9E%8B)
+  - [9.3 密码重置](https://github.com/andy-love-coding/laravel1.7#93-%E5%AF%86%E7%A0%81%E9%87%8D%E7%BD%AE)
+  - [9.4 生产环境中发送邮件](https://github.com/andy-love-coding/laravel1.7#94-%E7%94%9F%E4%BA%A7%E7%8E%AF%E5%A2%83%E4%B8%AD%E5%8F%91%E9%80%81%E9%82%AE%E4%BB%B6)
+- [10 微博 CRUD](https://github.com/andy-love-coding/laravel1.7#10-%E5%BE%AE%E5%8D%9A-crud)
+  - [10.2 微博模型](https://github.com/andy-love-coding/laravel1.7#102-%E5%BE%AE%E5%8D%9A%E6%A8%A1%E5%9E%8B)
     - 3.编写迁移文件(加索引)
     - 6.关联「微博」和「用户」（一对多）
-  - 10.3 [显示个人微博](https://github.com/andy-love-coding/laravel1.7#103-%E6%98%BE%E7%A4%BA%E4%B8%AA%E4%BA%BA%E5%BE%AE%E5%8D%9A)
+  - [10.3 显示个人微博](https://github.com/andy-love-coding/laravel1.7#103-%E6%98%BE%E7%A4%BA%E4%B8%AA%E4%BA%BA%E5%BE%AE%E5%8D%9A)
     - 4.造微博假数据 (4.4 服务容器)
-  - 10.4 [发布微博](https://github.com/andy-love-coding/laravel1.7#104-%E5%8F%91%E5%B8%83%E5%BE%AE%E5%8D%9A)
-  - 10.5 [首页微博列表](https://github.com/andy-love-coding/laravel1.7#105-%E9%A6%96%E9%A1%B5%E5%BE%AE%E5%8D%9A%E5%88%97%E8%A1%A8)
-  - 10.6 [删除微博](https://github.com/andy-love-coding/laravel1.7#106-%E5%88%A0%E9%99%A4%E5%BE%AE%E5%8D%9A)
-- 11 [粉丝关系](https://github.com/andy-love-coding/laravel1.7#11-%E7%B2%89%E4%B8%9D%E5%85%B3%E7%B3%BB)
-  - 11.2 [粉丝数据表](https://github.com/andy-love-coding/laravel1.7#112-%E7%B2%89%E4%B8%9D%E6%95%B0%E6%8D%AE%E8%A1%A8)
+  - [10.4 发布微博](https://github.com/andy-love-coding/laravel1.7#104-%E5%8F%91%E5%B8%83%E5%BE%AE%E5%8D%9A)
+  - [10.5 首页微博列表](https://github.com/andy-love-coding/laravel1.7#105-%E9%A6%96%E9%A1%B5%E5%BE%AE%E5%8D%9A%E5%88%97%E8%A1%A8)
+  - [10.6 删除微博](https://github.com/andy-love-coding/laravel1.7#106-%E5%88%A0%E9%99%A4%E5%BE%AE%E5%8D%9A)
+- [11 粉丝关系](https://github.com/andy-love-coding/laravel1.7#11-%E7%B2%89%E4%B8%9D%E5%85%B3%E7%B3%BB)
+  - [11.2 粉丝数据表](https://github.com/andy-love-coding/laravel1.7#112-%E7%B2%89%E4%B8%9D%E6%95%B0%E6%8D%AE%E8%A1%A8)
     - 关联博主和粉丝 (多对多)
-  - 11.3 [社交信息统计](https://github.com/andy-love-coding/laravel1.7#113-%E7%A4%BE%E4%BA%A4%E4%BF%A1%E6%81%AF%E7%BB%9F%E8%AE%A1)
-  - 11.4 [粉丝页面](https://github.com/andy-love-coding/laravel1.7#114-%E7%B2%89%E4%B8%9D%E9%A1%B5%E9%9D%A2)
-  - 11.5 [关注按钮](https://github.com/andy-love-coding/laravel1.7#115-%E5%85%B3%E6%B3%A8%E6%8C%89%E9%92%AE)
-  - 11.6 [动态流（显示所有关注用户的微博动态）](https://github.com/andy-love-coding/laravel1.7#116-%E5%8A%A8%E6%80%81%E6%B5%81%E6%98%BE%E7%A4%BA%E6%89%80%E6%9C%89%E5%85%B3%E6%B3%A8%E7%94%A8%E6%88%B7%E7%9A%84%E5%BE%AE%E5%8D%9A%E5%8A%A8%E6%80%81)
-## 3 构建页面
-### 3.2 创建应用
+  - [11.3 社交信息统计](https://github.com/andy-love-coding/laravel1.7#113-%E7%A4%BE%E4%BA%A4%E4%BF%A1%E6%81%AF%E7%BB%9F%E8%AE%A1)
+  - [11.4 粉丝页面](https://github.com/andy-love-coding/laravel1.7#114-%E7%B2%89%E4%B8%9D%E9%A1%B5%E9%9D%A2)
+  - [11.5 关注按钮](https://github.com/andy-love-coding/laravel1.7#115-%E5%85%B3%E6%B3%A8%E6%8C%89%E9%92%AE)
+  - [11.6 动态流（显示所有关注用户的微博动态）](https://github.com/andy-love-coding/laravel1.7#116-%E5%8A%A8%E6%80%81%E6%B5%81%E6%98%BE%E7%A4%BA%E6%89%80%E6%9C%89%E5%85%B3%E6%B3%A8%E7%94%A8%E6%88%B7%E7%9A%84%E5%BE%AE%E5%8D%9A%E5%8A%A8%E6%80%81)
+## 3 [构建页面](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
+### 3.2 [创建应用](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.做好准备
   ```
   > cd ~/Homestead && vagrant up
@@ -184,7 +184,7 @@
   $ git remote add origin git@github.com:andy-love-coding/laravel1.7.git
   $ git push -u origin master
   ```
-### 3.3 静态页面
+### 3.3 [静态页面](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.新建分支
   ```
   $ git checkout master
@@ -280,7 +280,7 @@
   $ git merge static-pages
   $ git push
   ```
-### 3.4 Artisan 命令
+### 3.4 [Artisan 命令](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - Artisan 是 Laravel 提供的 CLI（命令行接口）
   | 命令                         | 说明             |
   | ---------------------------- | ---------------- |
@@ -303,7 +303,7 @@
   ```
   $ php artisan migrate --help
   ```
-## 4 优化页面
+## 4 [优化页面](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 ### 4.2 样式美化
 - 1.新建分支
   ```
@@ -607,7 +607,7 @@
   $ git merge filling-layout-style
   $ git push
   ```
-## 5 用户模型
+## 5 [用户模型](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 ### 5.1 章节说明
 - 1.准备好舞台
   ```
@@ -731,7 +731,7 @@
   $ git merge modeling-users
   $ git push
   ```
-## 6 用户注册
+## 6 [用户注册](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 ### 6.2 显示用户信息
 - 0.新建一个分支
   ```
@@ -1176,7 +1176,7 @@
   $ git commit -m "6.7 根据环境配置不同的数据库"
   $ git push
   ```
-## 7 会话管理
+## 7 [会话管理](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 ### 7.2 会话
 - 1.新建分支
   ```
@@ -1417,7 +1417,7 @@
   $ git merge login-logout
   $ git push
   ```
-## 8 用户 CRUD
+## 8 [用户 CRUD](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 ### 8.2 更新用户
 - 1.新建一个分支
   ```
@@ -1896,7 +1896,7 @@
   $ git merge user-crud
   $ git push
   ```
-## 9 邮件发送
+## 9 [邮件发送](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 ### 9.2 账户激活
 - 1.新建分支
   ```
@@ -2265,8 +2265,8 @@
   $ git merge account-activation-password-resets
   $ git push
   ```
-## 10 微博 CRUD
-### 10.2 微博模型
+## 10 [微博 CRUD](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
+### 10.2 [微博模型](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.新建一个分支
   ```
   $ git checkout master
@@ -2347,7 +2347,7 @@
   $ git add -A
   $ git commit -m "10.2 微博数据模型"
   ```
-### 10.3 显示个人微博
+### 10.3 [显示个人微博](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.控制器 app/Http/Controllers/UsersController.php
   ```
   public function show(User $user)
@@ -2475,7 +2475,7 @@
   $ git add -A
   $ git commit -m "10.3 用户微博列表"
   ```
-### 10.4 发布微博
+### 10.4 [发布微博](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.路由 resource(,,['only'=>[]])
   ```
   Route::resource('statuses', 'StatusesController', ['only' => ['store', 'destroy']]);
@@ -2561,7 +2561,7 @@
   $ git add -A
   $ git commit -m "10.4 发布微博"
   ```
-### 10.5 首页微博列表
+### 10.5 [首页微博列表](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.在用户模型中 定义「动态流」方法 app/Models/User.php
   ```
   public function feed()
@@ -2624,7 +2624,7 @@
   $ git add -A
   $ git commit -m "10.5 首页微博列表"
   ```
-### 10.6 删除微博
+### 10.6 [删除微博](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.删除的授权策略
   ```
   $ php artisan make:policy StatusPolicy
@@ -2680,8 +2680,8 @@
   $ git merge user-statuses
   $ git push
   ```
-## 11 粉丝关系
-### 11.2 粉丝数据表
+## 11 [粉丝关系](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
+### 11.2 [粉丝数据表](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.新建一个分支
   ```
   $ git checkout master
@@ -2778,7 +2778,7 @@
   $ git add -A
   $ git commit -m "11.2 粉丝数据表"
   ```
-### 11.3 社交信息统计
+### 11.3 [社交信息统计](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.填充「关注」的假数据
   ```
   $ php artisan make:seeder FollowersTableSeeder
@@ -2941,7 +2941,7 @@
   $ git add -A
   $ git commit -m "11.3 社交统计信息"
   ```
-### 11.4 粉丝页面
+### 11.4 [粉丝页面](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.路由 routes/web.php
   ```
   Route::get('/users/{user}/followings', 'UsersController@followings')->name('users.followings');
@@ -3016,7 +3016,7 @@
   $ git add -A
   $ git commit -m "11.4 关注和粉丝列表页面"
   ```
-### 11.5 关注按钮
+### 11.5 [关注按钮](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.路由 routes/web.php
   ```
   Route::post('/users/followers/{user}', 'FollowersController@store')->name('followers.store');
@@ -3112,7 +3112,7 @@
   $ git add -A
   $ git commit -m "11.5 关注按钮"
   ```
-### 11.6 动态流（显示所有关注用户的微博动态）
+### 11.6 [动态流（显示所有关注用户的微博动态）](https://github.com/andy-love-coding/laravel1.7#%E7%9B%AE%E5%BD%95)
 - 1.app/Models/User.php
   ```
   // 动态流
