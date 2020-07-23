@@ -1730,3 +1730,91 @@
   $ git add -A
   $ git commit -m "8.4 查看用户列表 模型工厂 迁移文件 数据填充 分页"
   ```
+### 8.5 删除用户
+- 1.加管理员字段
+  - 1.1 生成迁移文件来加管理员字段
+    ```
+    $ php artisan make:migration add_is_admin_to_users_table --table=users
+    ```
+    database/migrations/[timestamp]_add_is_admin_to_users_table.php
+    ```
+    public function up()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->boolean('is_admin')->default(false);
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('is_admin');
+        });
+    }
+    ```
+    执行迁移
+    ```
+    $ php artisan migrate
+    ```
+  - 1.2 更改填充文件，将第一个用户设置为管理员
+    database/seeds/UsersTableSeeder.php
+    ```
+    public function run()
+    {
+        $users = factory(User::class)->times(50)->make();
+        User::insert($users->makeVisible(['password', 'remember_token'])->toArray());
+
+        $user = User::find(1);
+        $user->name = 'Summer';
+        $user->email = 'summer@example.com';
+        $user->is_admin = true;
+        $user->save();
+    }
+    ```
+    执行数据库重置和填充
+    ```
+    $ php artisan migrate:refresh --seed
+    ```
+- 2.destroy 动作
+  - 2.1 删除策略 app/Policies/UserPolicy.php
+    ```
+    public function destroy(User $currentUser, User $user)
+    {
+        // 管理员才能删除 且 自己不能删除自己
+        return $currentUser->is_admin && $currentUser->id !== $user->id;
+    }
+    ```
+  - 2.2 模板中用 @can 和 @endcan调用「删除策略」：resources/views/users/_user.blade.php
+    ```
+    <div class="list-group-item">
+      <img class="mr-3" src="{{ $user->gravatar() }}" alt="{{ $user->name }}" width=32>
+      <a href="{{ route('users.show', $user) }}">
+        {{ $user->name }}
+      </a>
+      @can('destroy', $user)
+        <form action="{{ route('users.destroy', $user->id) }}" method="post" class="float-right" onsubmit="return confirm('确定要删除该用户吗？')">
+          {{ csrf_field() }}
+          {{ method_field('DELETE') }}
+          <button type="submit" class="btn btn-sm btn-danger delete-btn">删除</button>
+        </form>
+      @endcan
+    </div>
+    ```
+  - 2.3 控制器中用 authorize() 调用「删除策略」，并执行删除动作：app/Http/Controllers/UsersController.php
+    ```
+    public function destroy(User $user)
+    {
+        $this->authorize('destroy', $user);
+        $user->delete();
+        session()->flash('success', '成功删除用户！');
+        return back();
+    }
+    ```
+- 3.Git 版本控制 及合并提交
+  ```
+  $ git add -A
+  $ git commit -m "8.5 管理员可删除用户"
+  $ git checkout master
+  $ git merge user-crud
+  $ git push
+  ```
