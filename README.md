@@ -2187,3 +2187,86 @@
   $ git merge account-activation-password-resets
   $ git push
   ```
+## 微博 CRUD
+### 10.2 微博模型
+- 1.新建一个分支
+  ```
+  $ git checkout master
+  $ git checkout -b user-statuses
+  ```
+
+- 2.创建模型的「迁移文件」
+  ```
+  $ php artisan make:migration create_statuses_table --create="statuses"
+  ```
+- 3.编写迁移文件(加索引) database/migrations/[timestamp]_create_statuses_table.php
+  ```
+  public function up()
+  {
+      Schema::create('statuses', function (Blueprint $table) {
+          $table->increments('id');
+          $table->text('content');
+          $table->integer('user_id')->index();
+          $table->index(['created_at']);
+          $table->timestamps();
+      });
+  }
+
+  public function down()
+  {
+      Schema::dropIfExists('statuses');
+  }
+  ```
+  - 加索引 index()
+    - user_id 会用来查找指定用户发布过的所有微博，因此为了提高查询效率，这里我们需要为该字段加上索引。
+    - created_at 微博的创建时间，为其添加索引的目的是，后面我们会根据微博的创建时间进行倒序输出。
+  - 对应的 sql 语句是
+    ```
+    CREATE TABLE `statuses` (
+      `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+      `content` text COLLATE utf8mb4_unicode_ci NOT NULL,
+      `user_id` int(11) NOT NULL,
+      `created_at` timestamp NULL DEFAULT NULL,
+      `updated_at` timestamp NULL DEFAULT NULL,
+      PRIMARY KEY (`id`),
+      KEY `statuses_created_at_index` (`created_at`),
+      KEY `statuses_user_id_index` (`user_id`)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ```
+- 4.执行迁移
+  ```
+  $ php artisan migrate
+  ```
+- 5.创建微博模型
+  ```
+  $ php artisan make:model Models/Status
+  ```
+- 6.关联「微博」和「用户」（一对多）
+  - app/Models/Status.php
+    ```
+    // 多对一 多条微博属于一个用户
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
+    ```
+  - app/Models/User.php
+    ```
+    // 一对多 一个用户拥有多条微博
+    public function statuses()
+    {
+        return $this->hasMany(Status::class);
+    }
+    ```
+  - 关联的好处
+    ```
+    // 关联之前创建微博
+    App\Models\Status::create()
+    // 关联之后创建微博，这样创建的微博会自动与用户进行关联
+    $user->statuses()->create()
+    ```
+- 7.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "10.2 微博数据模型"
+  ```
