@@ -1818,3 +1818,198 @@
   $ git merge user-crud
   $ git push
   ```
+## 9 邮件发送
+### 9.2 账户激活
+- 1.新建分支
+  ```
+  $ git checkout master
+  $ git checkout -b account-activation-password-resets
+  ```
+- 2.添加字段
+  - 2.1 新建迁移文件来添加字段
+    ```
+    $ php artisan make:migration add_activation_to_users_table --table=users
+    ```
+  - 2.2 编辑迁移文件 database/migrations/[timestamp]_add_activation_to_users_table.php
+    ```
+    public function up()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->string('activation_token')->nullable();
+            $table->boolean('activated')->default(false);
+        });
+    }
+
+    public function down()
+    {
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('activation_token');
+            $table->dropColumn('activated');
+        });
+    }
+    ```
+  - 2.3 执行迁移
+    ```
+    $ php artisan migrate
+    ```
+- 3.生成令牌
+  - 3.1 监听 Model 的 creating 事件，在用户「注册」之前生成用户的激活令牌 app/Models/User.php
+    ```
+    use Illuminate\Support\Str;
+    ...
+    public static function boot()
+    {
+        parent::boot();
+
+        static::creating(function ($user) {
+            $user->activation_token = Str::random(10);
+        });
+    }
+    ```
+    - boot() 方法会在用户模型类完成初始化之后进行加载，因此我们对事件的监听需要放在该方法中。
+  - 3.2 在模型工厂中将假用户设为激活 database/factories/UserFactory.php
+    ```
+    $factory->define(User::class, function (Faker $faker) {
+        $date_time = $faker->date . ' ' . $faker->time;
+        return [
+            'name' => $faker->name,
+            'email' => $faker->unique()->safeEmail,
+            'email_verified_at' => now(),
+            'activated' => true,
+            'password' => '$2y$10$TKh8H1.PfQx37YgCzwiKb.KjNyWgaHb9cbcoQgdIVFlYg7B77UdFm', // secret
+            'remember_token' => Str::random(10),
+            'created_at' => $date_time,
+            'updated_at' => $date_time,
+        ];
+    });
+    ```
+  - 3.3 重置数据库 并填充
+    ```
+    $ php artisan migrate:refresh --seed
+    ```
+- 4.发送邮件
+  - 4.1 在 .env 中设置邮件驱动为 log
+    ```
+    MAIL_DRIVER=log
+    ```
+  - 4.2 激活路由 (激活链接) routes/web.php
+    ```
+    Route::get('signup/confirm/{token}', 'UsersController@confirmEmail')->name('confirm_email');
+    ```
+  - 4.3 激活邮件视图 resources/views/emails/confirm.blade.php
+    ```
+    <!DOCTYPE html>
+    <html>
+    <head>
+      <meta charset="UTF-8">
+      <title>注册确认链接</title>
+    </head>
+    <body>
+      <h1>感谢您在 Weibo App 网站进行注册！</h1>
+
+      <p>
+        请点击下面的链接完成注册：
+        <a href="{{ route('confirm_email', $user->activation_token) }}">
+          {{ route('confirm_email', $user->activation_token) }}
+        </a>
+      </p>
+
+      <p>
+        如果这不是您本人的操作，请忽略此邮件。
+      </p>
+    </body>
+    </html>
+    ```
+  - 4.4 登录时检查是否已激活 app/Http/Controllers/SessionsController.php
+    ```
+    public function store(Request $request)
+    {
+       $credentials = $this->validate($request, [
+           'email' => 'required|email|max:255',
+           'password' => 'required'
+       ]);
+
+       if (Auth::attempt($credentials, $request->has('remember'))) {
+            // 登录成功
+            if (Auth::user()->activated) {
+                // 已激活
+                session()->flash('success', '欢迎回来！');    
+                // 登录后友好转向 intended() 
+                // 重定向到上一次请求尝试访问的页面上，并接收一个默认跳转地址参数，当上一次请求记录为空时，跳转到默认地址上。
+                $default = route('users.show', Auth::user());
+                return redirect()->intended($default);
+            } else {
+                // 未激活
+                Auth::logout();
+                session()->flash('warning', '您的账号未激活，请检查邮箱中的注册邮件进行激活。');
+                return redirect('/');
+            }
+        } else {
+            // 登录失败
+            session()->flash('danger', '很抱歉，您的邮箱和密码不匹配');
+            // 使用 withInput() 后模板里 old('email') 将能获取到上一次用户提交的内容
+            return redirect()->back()->withInput();
+        }
+    }
+    ```
+  - 4.5 发送邮件/激活 app/Http/Controllers/UsersController.php
+    ```
+    public function __construct()
+    {
+        // except 黑名单排除不需要登录的，其余都需要登录
+        $this->middleware('auth', [
+            'except' => ['show', 'create', 'store', 'index', 'confirmEmail']
+        ]);
+
+        // only 白名单设定注册必须为 游客模式（非登录）
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+
+    // 注册
+    public function store(Request $request)
+    {
+        ...
+        // Auth::login($user); // 把之前用户注册成功之后进行的登录操作 换成 以下激活邮箱发送操作
+        $this->sendEmailConfirmationTo($user);
+        session()->flash('success', '验证邮件已发送到你的注册邮箱上，请注意查收。');
+        return redirect()->route('users.show', $user);
+    }
+
+    // 发送激活
+    protected function sendEmailConfirmationTo($user)
+    {
+        $view = 'emails.confirm'; // 邮件用的视图
+        $data = compact('user');  // 视图要的数组数据
+        $from = '123@qq.com';     // 发件人邮箱
+        $name = 'andy';           // 发件人姓名
+        $to = $user->email;       // 收件人邮箱
+        $subject = '邮件标题：感谢注册哟！请完成激活哈！'; // 邮件标题
+
+        Mail::send($view, $data, function($message) use ($from, $name, $to, $subject) {
+            $message->from($from, $name)->to($to)->subject($subject);
+        });
+    }
+
+    // 激活
+    public function confirmEmail($token)
+    {
+        // firstOrFail 方法来取出第一个用户，在查询不到指定用户时将返回一个 404 响应
+        $user = User::where('activation_token', $token)->firstOrFail();
+
+        $user->activated = true;
+        $user->activation_token = null;
+        $user->save();
+
+        Auth::login($user);
+        session()->flash('success', '恭喜你，激活成功');
+        return redirect()->route('users.show', $user);
+    }
+    ```
+  - 4.6 测试：注册新用户后，在 `storage/logs/laravel-{today}.log` 中查收邮件，完成激活
+  - 4.7 Git 版本控制
+    ```
+    $ git add -A
+    $ git commit -m "9.2 用户激活 boot中做模型监听"  
+    ```
