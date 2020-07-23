@@ -2397,3 +2397,89 @@
   $ git add -A
   $ git commit -m "10.3 用户微博列表"
   ```
+### 10.4 发布微博
+- 1.路由 resource(,,['only'=>[]])
+  ```
+  Route::resource('statuses', 'StatusesController', ['only' => ['store', 'destroy']]);
+  ```
+- 2.控制器
+  ```
+  php artisan make:controller StatusesController
+  ```
+  app/Http/Controllers/StatusesController.php
+  ```
+  use Auth;
+  ...
+  public function __construct()
+  {
+      $this->middleware('auth');
+  }
+
+  public function store(Request $request)
+  {
+      $this->validate($request, [
+          'content' => 'required|max:140'
+      ]);
+
+      Auth::user()->statuses()->create([
+          'content' => $request['content']
+      ]);
+      session()->flash('success', '发布成功！');
+      return redirect()->back();
+  }
+  ```
+- 3.发布微博的「局部表单视图」 resources/views/shared/_status_form.blade.php
+  ```
+  <form action="{{ route('statuses.store') }}" method="POST">
+    @include('shared._errors')
+    {{ csrf_field() }}
+    <textarea class="form-control" rows="3" placeholder="聊聊新鲜事儿..." name="content">{{ old('content') }}</textarea>
+    <div class="text-right">
+        <button type="submit" class="btn btn-primary mt-3">发布</button>
+    </div>
+  </form>
+  ```
+- 4.在首页引入局部表单视图 resources/views/static_pages/home.blade.php
+  ```
+  @extends('layouts.default')
+
+  @section('content')
+    @if (Auth::check())
+      <div class="row">
+        <div class="col-md-8">
+          <section class="status_form">
+            @include('shared._status_form')
+          </section>
+        </div>
+        <aside class="col-md-4">
+          <section class="user_info">
+            @include('shared._user_info', ['user' => Auth::user()])
+          </section>
+        </aside>
+      </div>
+    @else
+      <div class="jumbotron">
+        <h1>Hello Laravel</h1>
+        <p class="lead">
+          你现在所看到的是 <a href="https://learnku.com/courses/laravel-essential-training">Laravel 入门教程</a> 的示例项目主页。
+        </p>
+        <p>
+          一切，将从这里开始。
+        </p>
+        <p>
+          <a class="btn btn-lg btn-success" href="{{ route('signup') }}" role="button">现在注册</a>
+        </p>
+      </div>
+    @endif
+  @stop
+  ```
+- 5.修改模型可更新字段 app/Models/Status.php
+  ```
+  // 允许更新微博的 content 字段
+  protected $fillable = ['content'];
+  ```
+- 6.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "10.4 发布微博"
+  ```
