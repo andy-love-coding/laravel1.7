@@ -2144,3 +2144,46 @@
   $ git add -A
   $ git commit -m "9.3 重置密码"
   ```
+### 9.4 生产环境中发送邮件
+- 1.开启QQ邮箱的SMTP，并复制『授权码』，授权码将作为我们的密码使用
+- 2.邮箱配置
+  ```
+  MAIL_DRIVER=smtp
+  MAIL_HOST=smtp.qq.com
+  MAIL_PORT=25
+  MAIL_USERNAME=844@qq.com
+  MAIL_PASSWORD=etxknliajakrbced
+  MAIL_ENCRYPTION=tls
+  MAIL_FROM_ADDRESS=844@qq.com
+  MAIL_FROM_NAME=andy
+  ```
+- 3.在 app/Http/Controllers/UsersController.php 中，邮件发送的 from() 可以去掉了，因为 .env 中已经配置了
+  ```
+  // 发送激活
+  protected function sendEmailConfirmationTo($user)
+  {
+      $view = 'emails.confirm'; // 邮件用的视图
+      $data = compact('user');  // 视图要的数组数据
+      $from = '123@qq.com';     // 发件人邮箱
+      $name = 'andy';           // 发件人姓名
+      $to = $user->email;       // 收件人邮箱
+      $subject = '邮件标题：感谢注册哟！请完成激活哈！'; // 邮件标题
+
+      // Mail::send($view, $data, function($message) use ($from, $name, $to, $subject) {
+      //     $message->from($from, $name)->to($to)->subject($subject);
+      // });
+      
+      // 因为在 .env 中配置了 MAIL_FROM_ADDRESS MAIL_FROM_NAME，因此不再需要使用 from 方法：
+      Mail::send($view, $data, function($message) use ($to, $subject) {
+          $message->to($to)->subject($subject);
+      });
+  }
+  ```
+- 4.Git 版本控制，及合并提交
+  ```
+  $ git add -A
+  $ git commit -m "9.4 移除邮件发送的 from 选项"
+  $ git checkout master
+  $ git merge account-activation-password-resets
+  $ git push
+  ```

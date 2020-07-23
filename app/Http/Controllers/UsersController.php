@@ -100,13 +100,16 @@ class UsersController extends Controller
     {
         $view = 'emails.confirm'; // 邮件用的视图
         $data = compact('user');  // 视图要的数组数据
-        $from = '123@qq.com';     // 发件人邮箱
-        $name = 'andy';           // 发件人姓名
+        // $from = '123@qq.com';     // 发件人邮箱
+        // $name = 'andy';           // 发件人姓名
         $to = $user->email;       // 收件人邮箱
         $subject = '邮件标题：感谢注册哟！请完成激活哈！'; // 邮件标题
 
-        Mail::send($view, $data, function($message) use ($from, $name, $to, $subject) {
-            $message->from($from, $name)->to($to)->subject($subject);
+        // Mail::send($view, $data, function($message) use ($from, $name, $to, $subject) {
+        //     $message->from($from, $name)->to($to)->subject($subject);
+        // });
+        Mail::send($view, $data, function($message) use ($to, $subject) {
+            $message->to($to)->subject($subject);
         });
     }
 
