@@ -2194,7 +2194,6 @@
   $ git checkout master
   $ git checkout -b user-statuses
   ```
-
 - 2.创建模型的「迁移文件」
   ```
   $ php artisan make:migration create_statuses_table --create="statuses"
@@ -2269,4 +2268,132 @@
   ```
   $ git add -A
   $ git commit -m "10.2 微博数据模型"
+  ```
+### 10.3 显示个人微博
+- 1.控制器 app/Http/Controllers/UsersController.php
+  ```
+  public function show(User $user)
+  {
+      $statuses = $user->statuses()
+                          ->orderBy('created_at', 'desc')
+                          ->paginate(10);
+      return view('users.show', compact('user', 'statuses'));
+  }
+  ```
+- 2.微博局部视图 resources/views/statuses/_status.blade.php
+  ```
+  <li class="media mt-4 mb-4">
+    <a href="{{ route('users.show', $user->id )}}">
+      <img src="{{ $user->gravatar() }}" alt="{{ $user->name }}" class="mr-3 gravatar"/>
+    </a>
+    <div class="media-body">
+      <h5 class="mt-0 mb-1">{{ $user->name }} <small> / {{ $status->created_at->diffForHumans() }}</small></h5>
+      {{ $status->content }}
+    </div>
+  </li>
+  ```
+  - diffForHumans() 该方法的作用是将日期进行友好化处理。
+- 3.在个人页面 resources/views/users/show.blade.php 引用微博局部视图
+  ```
+  @extends('layouts.default')
+  @section('title', $user->name)
+
+  @section('content')
+  <div class="row">
+    <div class="offset-md-2 col-md-8">
+      <section class="user_info">
+        @include('shared._user_info', ['user' => $user])
+      </section>
+      <section class="status">
+        @if ($statuses->count() > 0)
+          <ul class="list-unstyled">
+            @foreach ($statuses as $status)
+              @include('statuses._status')
+            @endforeach
+          </ul>
+          <div class="mt-5">
+            {!! $statuses->render() !!}
+          </div>
+        @else
+          <p>没有数据！</p>
+        @endif
+      </section>
+    </div>
+  </div>
+  @stop
+  ```
+- 4.造微博假数据 (4.4 服务容器)
+  - 4.1 生成微博模型的「模型工厂」（模型工厂造模型）
+    ```
+    $ php artisan make:factory StatusFactory
+    ```
+  - 4.2 编写微博模型的「模型工厂」 database/factories/StatusFactory.php
+    ```
+    <?php
+
+    use Faker\Generator as Faker;
+
+    $factory->define(App\Models\Status::class, function (Faker $faker) {
+        $date_time = $faker->date . ' ' . $faker->time;
+        return [
+            'content'    => $faker->text(),
+            'created_at' => $date_time,
+            'updated_at' => $date_time,
+        ];
+    });
+    ```
+  - 4.3 生成填充文件
+    ```
+    $ php artisan make:seeder StatusesTableSeeder
+    ```
+  - 4.4 编写填充文件（在填充文件中 调用 「微博模型工厂」来造模型，即填充数据） 
+    database/seeds/StatusesTableSeeder.php
+    ```
+    <?php
+
+    use Illuminate\Database\Seeder;
+    use App\Models\User;
+    use App\Models\Status;
+
+    class StatusesTableSeeder extends Seeder
+    {
+        public function run()
+        {
+            $user_ids = ['1','2','3'];
+            $faker = app(Faker\Generator::class);
+
+            $statuses = factory(Status::class)->times(100)->make()->each(function ($status) use ($faker, $user_ids) {
+                $status->user_id = $faker->randomElement($user_ids);
+            });
+
+            Status::insert($statuses->toArray());
+        }
+    }
+    ```
+    - [服务容器](https://learnku.com/docs/laravel/6.x/container/5131#68be3c)
+      - 上例中，通过 app() 或者 resolve() 来获取一个 Faker 容器 的实例
+      - 「服务容器」：就是一个装载和解析服务的容器，服务指的是「类」或「接口」
+      - 「绑定服务」：就是把服务绑定到容器中，几乎所有的服务容器绑定都会在 [服务提供者](https://learnku.com/docs/laravel/6.x/providers/5132) 中注册
+        ```
+        $this->app->bind('HelpSpot\API', function ($app) {
+            return new HelpSpot\API($app->make('HttpClient'));
+        });
+        ```
+      - 「解析实例」：就是通过 app() 或 resolve() 等从容器中得到「服务实例」    
+    - 在 database/seeds/DatabaseSeeder.php 调用
+      ```
+      public function run()
+      {
+          $this->call(UsersTableSeeder::class);
+          $this->call(StatusesTableSeeder::class);
+      }
+      ```
+    - 对数据库进行重置和填充
+      ```
+      $ php artisan migrate:refresh --seed
+      ```
+- 5.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "10.3 用户微博列表"
   ```
