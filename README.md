@@ -2008,8 +2008,139 @@
     }
     ```
   - 4.6 测试：注册新用户后，在 `storage/logs/laravel-{today}.log` 中查收邮件，完成激活
-  - 4.7 Git 版本控制
-    ```
-    $ git add -A
-    $ git commit -m "9.2 用户激活 boot中做模型监听"  
-    ```
+- 5 Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "9.2 用户激活 boot中做模型监听"  
+  ```
+### 9.3 密码重置
+- 1.思路说明：重置密码控制器逻辑框架已经写好，我们只需配置4个路由、1个入口、2个视图即可。
+- 2.重置密码路由
+  ```
+  Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+  Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+  Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+  Route::post('password/reset', 'Auth\ResetPasswordController@reset')->name('password.update');
+  ```
+- 3.登录页面中添加「忘记密码」入口 resources/views/sessions/create.blade.php
+  ```
+  <div class="form-group">
+    <label for="password">密码（<a href="{{ route('password.request') }}">忘记密码</a>）：</label>
+    <input type="password" name="password" class="form-control" value="{{ old('password') }}">
+  </div>
+  ```
+- 4.发送「重置密码表单」的视图 resources/views/auth/passwords/email.blade.php
+  ```
+  @extends('layouts.default')
+  @section('title', '重置密码')
+
+  @section('content')
+  <div class="col-md-8 offset-md-2">
+    <div class="card ">
+      <div class="card-header"><h5>重置密码</h5></div>
+
+      <div class="card-body">
+        @if (session('status'))
+        <div class="alert alert-success">
+          {{ session('status') }}
+        </div>
+        @endif
+
+        <form class="" method="POST" action="{{ route('password.email') }}">
+          {{ csrf_field() }}
+
+          <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
+            <label for="email" class="form-control-label">邮箱地址：</label>
+
+            <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required>
+
+            @if ($errors->has('email'))
+              <span class="form-text">
+                <strong>{{ $errors->first('email') }}</strong>
+              </span>
+            @endif
+          </div>
+
+          <div class="form-group">
+            <button type="submit" class="btn btn-primary">
+              发送密码重置邮件
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  @endsection
+  ```
+- 5.重置密码表单视图 resources/views/auth/passwords/reset.blade.php
+  ```
+  @extends('layouts.default')
+  @section('title', '更新密码')
+
+  @section('content')
+  <div class="offset-md-1 col-md-10">
+    <div class="card">
+      <div class="card-header">
+          <h5>更新密码</h5>
+      </div>
+
+      <div class="card-body">
+        <form method="POST" action="{{ route('password.update') }}">
+          @csrf
+
+          <input type="hidden" name="token" value="{{ $token }}">
+
+          <div class="form-group row">
+            <label for="email" class="col-md-4 col-form-label text-md-right">Email 地址</label>
+
+            <div class="col-md-6">
+              <input id="email" type="email" class="form-control{{ $errors->has('email') ? ' is-invalid' : '' }}" name="email" value="{{ $email ?? old('email') }}" required autofocus>
+
+              @if ($errors->has('email'))
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $errors->first('email') }}</strong>
+              </span>
+              @endif
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password" class="col-md-4 col-form-label text-md-right">密码</label>
+
+            <div class="col-md-6">
+              <input id="password" type="password" class="form-control{{ $errors->has('password') ? ' is-invalid' : '' }}" name="password" required>
+
+              @if ($errors->has('password'))
+              <span class="invalid-feedback" role="alert">
+                <strong>{{ $errors->first('password') }}</strong>
+              </span>
+              @endif
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <label for="password-confirm" class="col-md-4 col-form-label text-md-right">确认密码</label>
+
+            <div class="col-md-6">
+              <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
+            </div>
+          </div>
+
+          <div class="form-group row mb-0">
+            <div class="col-md-6 offset-md-4">
+              <button type="submit" class="btn btn-primary">
+                重置密码
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  @endsection
+  ```
+- 6.Git 版本控制
+  ```
+  $ git add -A
+  $ git commit -m "9.3 重置密码"
+  ```
